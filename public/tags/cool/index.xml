@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>cool | This site is awesome!</title>
+    <link>/tags/cool/</link>
+      <atom:link href="/tags/cool/index.xml" rel="self" type="application/rss+xml" />
+    <description>cool</description>
+    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Thu, 09 Jan 2020 00:00:00 +0000</lastBuildDate>
+    <image>
+      <url>/images/icon_hu0b7a4cb9992c9ac0e91bd28ffd38dd00_9727_512x512_fill_lanczos_center_2.png</url>
+      <title>cool</title>
+      <link>/tags/cool/</link>
+    </image>
+    
+    <item>
+      <title>Cool Project</title>
+      <link>/project/my-new-project/</link>
+      <pubDate>Thu, 09 Jan 2020 00:00:00 +0000</pubDate>
+      <guid>/project/my-new-project/</guid>
+      <description>
+
+
+&lt;p&gt;Here’s some sweet code&lt;/p&gt;
+&lt;p&gt;Cool plot!&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>
