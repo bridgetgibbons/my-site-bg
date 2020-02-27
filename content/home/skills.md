@@ -17,19 +17,37 @@ subtitle = ""
 [[feature]]
   icon = "r-project"
   icon_pack = "fab"
-  name = "R"
-  description = "90%"
+  name = "RStudio"
+  description = ""
   
 [[feature]]
-  icon = "chart-line"
+  icon = "map"
   icon_pack = "fas"
-  name = "Statistics"
-  description = "100%"  
+  name = "ArcGis"
+  description = ""  
   
 [[feature]]
-  icon = "camera-retro"
+  icon = "file-contract"
   icon_pack = "fas"
-  name = "Photography"
-  description = "10%"
+  name = "Policy Analysis"
+  description = ""
+  
+[[feature]]
+  icon = "users"
+  icon_pack = "fas"
+  name = "Communication"
+  description = ""
+
+[[feature]]
+  icon = "water"
+  icon_pack = "fas"
+  name = "Field Work"
+  description = ""
+
+[[feature]]
+  icon = "chalkboard-teacher"
+  icon_pack = "fas"
+  name = "Presentations"
+  description = ""
 
 +++

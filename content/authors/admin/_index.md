@@ -14,8 +14,8 @@ email: "bvgibbons@gmail.com"
 interests:
 - Groundwater Management
 - Policy Analysis
-- Ice Cream
-name: Bridget Gibbons
+- Water Markets and Transactions
+name: 
 organizations:
 - name: Bren School of Environmental Science and Management, UC Santa Barbara
   url: ""
@@ -39,4 +39,4 @@ user_groups:
 - Visitors
 ---
 
-Nelson Bighetti is a professor of artificial intelligence at the Stanford AI Lab. His research interests include distributed robotics, mobile computing and programmable matter. He leads the Robotic Neurobiology group, which develops self-reconfiguring robots, systems of self-organizing robots, and mobile sensor networks.
+Bridget Gibbons is a second year masters student at the Bren School, where she specializes in both water resources management and economics and politics of the environment. As a Sustainable Water Markets fellow, Bridget studies market design and transactions that can be used as mechanisms to improve water management across the West while meeting the needs of communities, water users, and the environment. Bridget is particularly interested in groundwater management and policies related to recharge and conjunctive use.
