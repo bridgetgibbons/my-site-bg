@@ -12,10 +12,11 @@ education:
     year: 2014
 email: "bvgibbons@gmail.com"
 interests:
+- Water Markets and Transactions
 - Groundwater Management
 - Policy Analysis
-- Water Markets and Transactions
-name: 
+- Ice Cream
+name: Bridget Gibbons
 organizations:
 - name: Bren School of Environmental Science and Management, UC Santa Barbara
   url: ""
@@ -39,4 +40,4 @@ user_groups:
 - Visitors
 ---
 
-Bridget Gibbons is a second year masters student at the Bren School, where she specializes in both water resources management and economics and politics of the environment. As a Sustainable Water Markets fellow, Bridget studies market design and transactions that can be used as mechanisms to improve water management across the West while meeting the needs of communities, water users, and the environment. Bridget is particularly interested in groundwater management and policies related to recharge and conjunctive use.
+I'm a second year masters student at the Bren School, specializing in both water resources management and economics and politics of the environment. As a Sustainable Water Markets fellow, I study market designs and transactions across the West that can be used as mechanisms to improve water management to better meet the needs of communities, water users, and the environment. I'm particularly interested in groundwater management and policies related to recharge and conjunctive use.
