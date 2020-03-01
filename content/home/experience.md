@@ -26,21 +26,16 @@ date_format = "Jan 2006"
   date_start = "2019-06-24"
   date_end = "2019-08-16"
   description = """
-  Responsibilities include:
+  Contributed to the launch of a nationwide water policy database. 
   
-  * Analysing
-  * Modelling
-  * Deploying
+  Conducted a 50-state policy analysis of water elements in local comprehensive plans.
+  
+  Skills gained:
+  
+  * Multi-state comparative policy analysis
+  * Communication with state agencies
+  * Database management in Tableau
   """
-
-[[experience]]
-  title = "Environmeental Project Manager"
-  company = "ECS Midwest, LLC"
-  company_url = "https://www.ecslimited.com/"
-  location = "Chicago, Illinois"
-  date_start = "2014-07-07"
-  date_end = "2018-05-31"
-  description = """Taught electronic engineering and researched semiconductor physics."""
   
 [[experience]]
   title = "Environmeental Project Manager"
@@ -49,15 +44,36 @@ date_format = "Jan 2006"
   location = "Chicago, Illinois"
   date_start = "2014-07-07"
   date_end = "2018-05-31"
-  description = """Taught electronic engineering and researched semiconductor physics."""
+  description = """
+  
+  Executed Phase I and Phase II Environmental Site Assessments.
+  
+  Designed and oversaw projects to remediate groundwater and soil exposure pathways for regulated contaminants.
+  
+   Skills gained:
+  
+  * Project management
+  * Technical report writing
+  * Client and stakeholder communication
+  """
   
 [[experience]]
-  title = "Environmeental Project Manager"
-  company = "ECS Midwest, LLC"
-  company_url = "https://www.ecslimited.com/"
-  location = "Chicago, Illinois"
-  date_start = "2014-07-07"
-  date_end = "2018-05-31"
-  description = """Taught electronic engineering and researched semiconductor physics."""
+  title = "Hydrology Technician"
+  company = "USDA Forest Service, Ashley National Forest"
+  company_url = "https://www.fs.usda.gov/ashley"
+  location = "Vernal, Utah"
+  date_start = "2012-06-22"
+  date_end = "2012-08-31"
+  description = """
+  
+  Surveyed springs, streams, and wetlands for a national database of groundwater sources.
+  
+  Performed in-situ water chemistry and flow measurements to assess river health to inform forest management practices.
+  
+   Skills gained:
+  
+  * Field work
+  * Water sampling and analysis
+  """
 
 +++

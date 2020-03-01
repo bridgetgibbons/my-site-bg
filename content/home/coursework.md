@@ -9,7 +9,7 @@ date = "2016-04-20T00:00:00"
 
 title = "Select Coursework" 
 subtitle = ""
-columns = 2
+columns = "2"
 
 #Order that this section will appear in.
 weight = 25
