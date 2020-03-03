@@ -13,19 +13,6 @@
     </image>
     
     <item>
-      <title>Cool Project</title>
-      <link>/project/my-new-project/</link>
-      <pubDate>Thu, 09 Jan 2020 00:00:00 +0000</pubDate>
-      <guid>/project/my-new-project/</guid>
-      <description>
-
-
-&lt;p&gt;Here’s some sweet code&lt;/p&gt;
-&lt;p&gt;Cool plot!&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
       <title>Spatial Analysis of Watersheds</title>
       <link>/project/hawaii_spatial/</link>
       <pubDate>Thu, 09 Jan 2020 00:00:00 +0000</pubDate>

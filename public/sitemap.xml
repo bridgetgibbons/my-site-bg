@@ -28,11 +28,6 @@
   </url>
   
   <url>
-    <loc>/project/my-new-project/</loc>
-    <lastmod>2020-01-09T15:02:28-08:00</lastmod>
-  </url>
-  
-  <url>
     <loc>/project/pca/</loc>
     <lastmod>2020-01-09T15:02:28-08:00</lastmod>
   </url>
@@ -158,16 +153,6 @@
   </url>
   
   <url>
-    <loc>/tags/deep-learning/</loc>
-    <lastmod>2016-04-27T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/project/internal-project/</loc>
-    <lastmod>2016-04-27T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
     <loc>/tags/thesis/</loc>
     <lastmod>2016-04-27T00:00:00+00:00</lastmod>
   </url>
@@ -240,10 +225,6 @@
   <url>
     <loc>/publication/conference-paper/</loc>
     <lastmod>2013-07-01T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/project/my-newer-project/</loc>
   </url>
   
 </urlset>
