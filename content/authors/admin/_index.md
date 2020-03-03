@@ -1,7 +1,7 @@
 ---
 authors:
 - admin
-bio: Hire me!
+bio:
 education:
   courses:
   - course: MS Environmental Science and Management

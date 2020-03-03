@@ -1,0 +1,97 @@
+---
+title: Spatial Analysis of Watersheds
+author: ''
+date: '2020-01-09'
+slug: hawaii_spatial
+categories: []
+tags:
+  - spatial
+  - water
+subtitle: 'Spatial analysis of land use types on the island of Kauai by watershed'
+summary: 'Mapping land use type on Kauai by watershed'
+authors: []
+lastmod: '2020-01-09T15:02:28-08:00'
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+projects: []
+---
+
+
+
+<pre class="r"><code>## Attach packages:
+library(tidyverse)
+library(janitor)
+library(lubridate)
+library(here)
+library(paletteer)
+library(sf)
+library(tmap)
+library(mapview)
+library(tmaptools)
+library(rmapshaper)</code></pre>
+<pre class="r"><code># Read in the shapefiles and check projections
+
+watersheds &lt;- read_sf(dsn = &quot;.&quot;,
+                 layer = &quot;Watersheds&quot;) %&gt;% 
+              st_transform(crs = 4326) %&gt;% 
+  select(&quot;wuname&quot;, &quot;area_sqmi&quot;)
+
+land_cover &lt;- read_sf(dsn = &quot;.&quot;,
+                       layer = &quot;Land_Use_Land_Cover_LULC&quot;) %&gt;% 
+  st_transform(crs = 4326) %&gt;% 
+  filter(landcover != 0)
+
+# there are a lot of different land cover types, group into overall categories
+
+land_cover_simple &lt;- land_cover %&gt;% 
+  mutate(landcover_type = case_when(
+     landcover == &quot;Cropland and Pasture&quot; ~ &quot;Agriculture&quot;,
+     landcover == &quot;Commercial and Services&quot; ~ &quot;Developed&quot;,
+     landcover == &quot;Residential&quot; ~ &quot;Developed&quot;,          
+     landcover ==&quot;Evergreen Forest Land&quot; ~ &quot;Natural&quot;,   
+     landcover ==&quot;Other Urban or Built-up Land&quot; ~ &quot;Developed&quot;,
+     landcover ==&quot;Mixed Rangeland&quot; ~ &quot;Agriculture&quot;,           
+     landcover ==&quot;Industrial&quot; ~ &quot;Industrial&quot;,                    
+     landcover ==&quot;Streams and Canals&quot; ~ &quot;Natural&quot;,      
+     landcover ==&quot;Orchards, Groves, Vineyards, Nurseries and Ornamental Horticultural Areas&quot; ~ &quot;Agriculture&quot;,
+     landcover ==&quot;Shrub and Brush Rangeland&quot; ~ &quot;Agriculture&quot;,
+     landcover ==&quot;Forested Wetland&quot; ~ &quot;Natural&quot;,        
+     landcover ==&quot;Reservoirs&quot; ~ &quot;Water&quot;,                
+     landcover ==&quot;Nonforested Wetland&quot; ~ &quot;Natural&quot;,     
+     landcover ==&quot;Bare Exposed Rock&quot; ~ &quot;Natural&quot;,       
+     landcover ==&quot;Sandy Areas Other than Beaches&quot; ~ &quot;Natural&quot;,
+     landcover ==&quot;Transportation, Communications and Utilities&quot; ~ &quot;Industrial&quot;,
+     landcover ==&quot;Herbaceous Rangeland&quot; ~ &quot;Agriculture&quot;,
+     landcover ==&quot;Beaches&quot; ~ &quot;Natural&quot;,                 
+     landcover ==&quot;Other Agricultural Land&quot; ~ &quot;Agriculture&quot;,
+     landcover ==&quot;Lakes&quot; ~ &quot;Water&quot;,                     
+     landcover ==&quot;Strip Mines, Quarries, and Gravel Pits&quot; ~ &quot;Industrial&quot;,
+     landcover ==&quot;Mixed Barren Land&quot; ~ &quot;Natural&quot;,       
+     landcover ==&quot;Bays and Estuaries&quot; ~ &quot;Water&quot;,        
+     landcover ==&quot;Mixed Urban or Built-up Land&quot; ~ &quot;Developed&quot;,
+     landcover ==&quot;Transitional Areas&quot; ~ &quot;Developed&quot;,    
+     landcover ==&quot;Industrial and Commercial Complexes&quot; ~ &quot;Industrial&quot;,  
+     landcover ==&quot;Confined Feeding Operations&quot; ~ &quot;Agriculture&quot;
+  )) %&gt;% 
+  select(landcover_type)</code></pre>
+<pre class="r"><code>#plot(watersheds)
+#plot(land_cover_simple)</code></pre>
+<pre class="r"><code>hi_map_kauai &lt;- ggplot() +
+  geom_sf(data = land_cover_simple,
+          aes(fill = landcover_type),
+          color = NA) +
+  scale_fill_manual(values = c(&quot;peru&quot;, &quot;darkolivegreen&quot;, &quot;grey65&quot;, &quot;indianred4&quot;, &quot;cadetblue4&quot;)) +
+  geom_sf(data = watersheds, fill = NA, color = 
+            &quot;white&quot;, size = 0.2) +
+  coord_sf(xlim = c(-159.2, -159.8), ylim = c(21.8, 22.3), expand = FALSE) +
+  theme_minimal() +
+  labs(fill = &quot;Landcover Type&quot;)
+
+hi_map_kauai</code></pre>
+<p><img src="/project/hawaii_spatial/watershed_land_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<p><strong>Data Sources:</strong>
+Land use/land cover data: <a href="http://geoportal.hawaii.gov/datasets/land-use-land-cover-lulc" class="uri">http://geoportal.hawaii.gov/datasets/land-use-land-cover-lulc</a></p>
+<p>Watershed data: <a href="http://geoportal.hawaii.gov/datasets/watersheds" class="uri">http://geoportal.hawaii.gov/datasets/watersheds</a></p>

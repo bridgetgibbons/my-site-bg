@@ -1,0 +1,123 @@
+---
+title: Time Series Analysis
+author: ''
+date: '2020-01-09'
+slug: bonneville_fish
+categories: []
+tags:
+  - statistical
+subtitle: 'Visualizing trends for adult Steelhead passage at Bonneville Dam on the Columbia River'
+summary: 'Fish passage at Bonneville Dam'
+authors: []
+lastmod: '2020-01-09T15:02:28-08:00'
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+projects: []
+---
+
+
+
+<div id="introduction" class="section level4">
+<h4>Introduction</h4>
+<p>Steelhead are an important fish within the salmonid family, and population health and reproductive success depend on passage through Columbia River Basin.</p>
+<div class="figure">
+<img src="steelhead.png" alt="Steelhead. Photo: NOAA Fisheries" />
+<p class="caption"><strong>Steelhead.</strong> Photo: NOAA Fisheries</p>
+</div>
+<p>Bonneville Dam was constructed in 1934, and it is the first river-wide barrier that migrating steelhead would encounter when moving upstream. When assessing the impact this blockage has had on the species, it is necessary to analyze the rates of successful salmonid passage beyond the dam over time. Understanding any trends over time related to successful passage rates will help policy makers consider the need for improved fish ladders and assistive designs.</p>
+<div class="figure">
+<img src="bonneville.jpg" alt="Bonneville Dam. Photo: Britannica" />
+<p class="caption"><strong>Bonneville Dam.</strong> Photo: Britannica</p>
+</div>
+<p>This analysis assesses Steelhead passage time series data from the Columbia River DART program. The data is analyzes in daily, seasonal, and yearly plots in order to fully explore passage trends as salmonid spawning and travel throughout the Columbia is seasonal and often dependent on water temperatures.</p>
+<p>Data from: Columbia Basin Research Available here: Adult fish passage (<a href="http://www.cbr.washington.edu/dart/query/adult_graph_text" class="uri">http://www.cbr.washington.edu/dart/query/adult_graph_text</a>)</p>
+<p>Citation: Columbia River DART, Columbia Basin Research, University of Washington. (2019). Adult Passage Graphics &amp; Text. Available from <a href="http://www.cbr.washington.edu/dart/query/adult_graph_text" class="uri">http://www.cbr.washington.edu/dart/query/adult_graph_text</a></p>
+<pre class="r"><code># Load packages and read in data
+
+library(tidyverse)
+library(fable)
+library(fabletools)
+library(feasts)
+library(janitor)
+library(lubridate)
+library(forecast)
+library(paletteer)
+library(tsibble)
+
+fish &lt;- read_csv(&quot;cbr_fish_passage_bonneville_allyrs_steelhead.csv&quot;) %&gt;% 
+  clean_names() </code></pre>
+<pre class="r"><code># Explore the content of the dataset to check if it only contains adult steelheads
+
+unique(fish$parameter) # only contains &quot;Stlhd&quot;</code></pre>
+<pre><code>## [1] &quot;Stlhd&quot;</code></pre>
+<pre class="r"><code>unique(fish$datatype) # only contains &quot;Adult Passage&quot;</code></pre>
+<pre><code>## [1] &quot;Adult Passage&quot;</code></pre>
+<pre class="r"><code># Clean up and parse the date column to prepare for time series plots
+
+fish_dates &lt;- fish %&gt;% 
+  mutate(date = paste(year, mm_dd, sep = &quot;-&quot;)) %&gt;% # all data information in one column
+  mutate(
+    year_month_day = lubridate::parse_date_time(date, &quot;ydm&quot;),
+    year_month_day = as.Date(year_month_day),
+    month_sep = yearmonth(year_month_day)
+    ) %&gt;% # store iformation as a date, parse
+  mutate(
+    month = month(year_month_day)
+    ) %&gt;% # parse just the month information
+  drop_na(month_sep) %&gt;% 
+  drop_na(value) # remove NA values after skimming data to explore missingness</code></pre>
+<pre class="r"><code># Make a daily time series plot
+
+fish_daily &lt;- ggplot(data = fish_dates, aes(x = year_month_day, y = value)) +
+  geom_line(color = &quot;darkolivegreen&quot;) +
+  theme_minimal() +
+  xlab(&quot;\nDate&quot;) +
+  ylab(&quot;Adult Steelhead Passage&quot;) +
+  scale_y_continuous(expand = c(0,0)) +
+  labs(caption = &quot;Figure 1. Daily adult steelhead passage across Bonneville Dam from 1939 to 2019&quot;)
+
+fish_daily</code></pre>
+<p><img src="/project/bonneville_fish/bonneville_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<p>The daily data for adult Steelhead passage across Bonneville Dam appears to show seasonaility, with no cyclical or long term trends. There is variation across the maximum height in each peak, which we’ll next explore by making a seasonal plot, in which passage values are aggregated by month.</p>
+<pre class="r"><code># Make a season plot organized by month
+
+fish_monthly &lt;- fish_dates %&gt;% 
+  group_by(month, year) %&gt;% # aggregating first by month, and then by year
+  summarize(monthly_total = sum(value)) # adding the passage values across the groupings
+
+fish_season_plot &lt;- ggplot(data = fish_monthly, aes(x = month, y = monthly_total/1000, group = year)) +
+  geom_line(aes(color = year), alpha = 0.5, size = 0.8) +
+  theme_minimal() +
+  xlab(&quot;\nMonth&quot;) +
+  scale_x_discrete(limits = c(&quot;1&quot;, &quot;2&quot;, &quot;3&quot;, &quot;4&quot;, &quot;5&quot;, &quot;6&quot;, &quot;7&quot;, &quot;8&quot;, &quot;9&quot;, &quot;10&quot;, &quot;11&quot;, &quot;12&quot;)) +
+  ylab(&quot;Total Steelheead Passage per Month \n(Thousands)\n&quot;) +
+  guides(color = guide_legend(&quot;Year (1939 - 2019)&quot;)) +
+  scale_y_continuous(expand = c(0,0)) +
+  labs(caption = &quot;Figure 2. Monthly Steelhead passage across Bonneville Dam&quot;)
+
+fish_season_plot</code></pre>
+<p><img src="/project/bonneville_fish/bonneville_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<p>The season plot, in which the successful passage values were aggregated by month, shows a more clear trend in the timing of fish passage. Yearly Steelhead passage appears to peak in the months of July, August, and September, though the height of the peak varies between years. Next, we’ll explore yearly trends.</p>
+<pre class="r"><code># Make an annual plot
+
+fish_yearly &lt;- fish_dates %&gt;% 
+  group_by(year) %&gt;% 
+  summarize(yearly_total = sum(value))
+
+annual_plot &lt;- ggplot(fish_yearly, aes(x = year, y = yearly_total/1000)) +
+  geom_line(color = &quot;darkolivegreen&quot;) +
+  theme_minimal() +
+  xlab(&quot;\nYear&quot;) +
+  ylab(&quot;Steelhead Passage \n (Thousands)\n&quot;) +
+  scale_x_continuous(expand = c(0,0), limits = c(1939, 2020)) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  scale_y_continuous(expand = c(0,0)) +
+  labs(caption = &quot;Figure 3. Yearly Steelhead passage across Bonneville Dam from 1939 to 2019&quot;)
+
+annual_plot</code></pre>
+<p><img src="/project/bonneville_fish/bonneville_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<p>Aggregated by year, Steelhead passage does not seem to follow an overall trend or cyclicality. Successful passage appears to have increased in the early 2000s, before experiencing a sharp decline in more recent years.</p>
+</div>

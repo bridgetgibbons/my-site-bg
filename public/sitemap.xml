@@ -28,12 +28,12 @@
   </url>
   
   <url>
-    <loc>/tags/cool/</loc>
+    <loc>/project/my-new-project/</loc>
     <lastmod>2020-01-09T15:02:28-08:00</lastmod>
   </url>
   
   <url>
-    <loc>/project/my-new-project/</loc>
+    <loc>/project/pca/</loc>
     <lastmod>2020-01-09T15:02:28-08:00</lastmod>
   </url>
   
@@ -43,7 +43,32 @@
   </url>
   
   <url>
+    <loc>/tags/spatial/</loc>
+    <lastmod>2020-01-09T15:02:28-08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/project/hawaii_spatial/</loc>
+    <lastmod>2020-01-09T15:02:28-08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/statistical/</loc>
+    <lastmod>2020-01-09T15:02:28-08:00</lastmod>
+  </url>
+  
+  <url>
     <loc>/tags/</loc>
+    <lastmod>2020-01-09T15:02:28-08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/project/bonneville_fish/</loc>
+    <lastmod>2020-01-09T15:02:28-08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/water/</loc>
     <lastmod>2020-01-09T15:02:28-08:00</lastmod>
   </url>
   
@@ -128,22 +153,22 @@
   </url>
   
   <url>
-    <loc>/tags/deep-learning/</loc>
-    <lastmod>2016-04-27T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/tags/demo/</loc>
-    <lastmod>2016-04-27T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
     <loc>/project/external-project/</loc>
     <lastmod>2016-04-27T00:00:00+00:00</lastmod>
   </url>
   
   <url>
+    <loc>/tags/deep-learning/</loc>
+    <lastmod>2016-04-27T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
     <loc>/project/internal-project/</loc>
+    <lastmod>2016-04-27T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/thesis/</loc>
     <lastmod>2016-04-27T00:00:00+00:00</lastmod>
   </url>
   

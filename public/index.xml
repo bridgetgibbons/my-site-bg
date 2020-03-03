@@ -88,6 +88,287 @@
     </item>
     
     <item>
+      <title>Principal Components Analysis</title>
+      <link>/project/pca/</link>
+      <pubDate>Thu, 09 Jan 2020 00:00:00 +0000</pubDate>
+      <guid>/project/pca/</guid>
+      <description>
+
+
+&lt;p&gt;This projcet explores global climatactic and environmental factors and the relationship to the prevalence of agriculture and city access on the country level. The data used for this analysis is a subset of a larger dataset compiled and provided by &lt;span class=&#34;citation&#34;&gt;@zander_venter&lt;/span&gt; on Kaggle. The data was aquired from Google Earth Engine (&lt;a href=&#34;https://earthengine.google.com/&#34; class=&#34;uri&#34;&gt;https://earthengine.google.com/&lt;/a&gt;) using publically available, remote sensing data, that had been uploaded for various countries. Most of the data is derived by calculating the mean for each country at a scale of about 10km. The variables chosen for inclusion in this analysis are access to cities, cropland cover, elevation, mean annual temperature, mean annual precipitation, and cloudiness. A principal components analysis is included below to demonstrate directionality of the greatest source of variance within the selected variables.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# load the necessary packages
+
+library(tidyverse)
+library(kableExtra)
+library(janitor)
+library(lubridate)
+library(tidyr)
+library(ggfortify)
+library(RColorBrewer)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# explore data
+env &amp;lt;- read_csv(&amp;quot;world_env_vars.csv&amp;quot;) %&amp;gt;% 
+  clean_names() # update the column names
+
+summary(env) # look at the data&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# retain variables of interest for my pca analysis
+
+env_pca_data &amp;lt;- env %&amp;gt;% 
+  select(accessibility_to_cities, elevation, cropland_cover,  rain_mean_annual, temp_mean_annual, cloudiness) 
+
+# explore subset data and understand missingness
+
+#VIM::matrixplot(env_pca_data)
+
+#naniar::gg_miss_var(env_pca_data)
+
+# there aren&amp;#39;t too many NA values, ok to remove them from the dataset
+
+env_nona &amp;lt;- env_pca_data %&amp;gt;% 
+  drop_na() %&amp;gt;%  # remove NA values
+  rename(&amp;quot;City Access&amp;quot; = accessibility_to_cities, 
+         &amp;quot;Elevation&amp;quot; = elevation,
+         &amp;quot;Crop Cover&amp;quot; = cropland_cover,
+         &amp;quot;Annual Mean Rainfall&amp;quot; = rain_mean_annual,
+         &amp;quot;Annual Mean Temperature&amp;quot; = temp_mean_annual,
+         &amp;quot;Cloudiness&amp;quot; = cloudiness) # rename the variables so the plot will make more sense
+
+pca &amp;lt;- prcomp(env_nona, scale = TRUE) # run the PCA
+
+
+#biplot(pca) # view initial biplot&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# finalize the PCA biplot
+
+final_pca_plot &amp;lt;- autoplot(pca,
+                        colour = &amp;quot;black&amp;quot;,
+                        alpha = 0.15,
+                        loadings.colour = &amp;quot;darkgrey&amp;quot;,
+                        loadings.label = TRUE,
+                        loadings.label.size = 3,
+                        loadings.label.colour = &amp;quot;darkgreen&amp;quot;,
+                        loadings.label.repel = TRUE,
+                        loadings.label.vjust = 2,
+                        loadings.label.hjust = 0.5)+
+  theme_minimal()
+
+final_pca_plot&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/project/pca/index_files/figure-html/unnamed-chunk-4-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Figure 1. Principal components analysis exploring the relationships between country-level environmental and climactic variables.&lt;/strong&gt; A subset of variables from the available climactic and environmental data was chosen to visualize the relationships between access to cities and the prevalence of agriculture, along with environmental and climatic factors that could influence a country’s suitability for growing crops. Variables selected include: access to cities, elevation, cropland cover, temperature, rainfall, and cloudiness. Principal components 1 and 2 explain ~59% of overall variance in the data. Data source: &lt;span class=&#34;citation&#34;&gt;@zander_venter&lt;/span&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;br&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Summary of principal components analysis for country-level environmental and climatic variables:
+&lt;ul&gt;
+&lt;li&gt;Crop Cover and Elevation are positively correlated&lt;/li&gt;
+&lt;li&gt;Annual Mean Rainfall and City Access are positively correlated&lt;/li&gt;
+&lt;li&gt;Annual Mean Temperature is negatively correlated with Crop Cover and Elevation&lt;/li&gt;
+&lt;li&gt;Cloudiness is not related to Annual Mean Temperature, Crop Cover, or Elevation&lt;/li&gt;
+&lt;li&gt;Principal components 1 and 2 explain ~59% of variance in the data&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;br&gt;&lt;/p&gt;
+&lt;p&gt;Reference:
+&lt;br&gt;
+&lt;span class=&#34;citation&#34;&gt;@zander_venter&lt;/span&gt; on Kaggle, data from Google Earth Engine (&lt;a href=&#34;https://earthengine.google.com/&#34; class=&#34;uri&#34;&gt;https://earthengine.google.com/&lt;/a&gt;).&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Spatial Analysis of Watersheds</title>
+      <link>/project/hawaii_spatial/</link>
+      <pubDate>Thu, 09 Jan 2020 00:00:00 +0000</pubDate>
+      <guid>/project/hawaii_spatial/</guid>
+      <description>
+
+
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;## Attach packages:
+library(tidyverse)
+library(janitor)
+library(lubridate)
+library(here)
+library(paletteer)
+library(sf)
+library(tmap)
+library(mapview)
+library(tmaptools)
+library(rmapshaper)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# Read in the shapefiles and check projections
+
+watersheds &amp;lt;- read_sf(dsn = &amp;quot;.&amp;quot;,
+                 layer = &amp;quot;Watersheds&amp;quot;) %&amp;gt;% 
+              st_transform(crs = 4326) %&amp;gt;% 
+  select(&amp;quot;wuname&amp;quot;, &amp;quot;area_sqmi&amp;quot;)
+
+land_cover &amp;lt;- read_sf(dsn = &amp;quot;.&amp;quot;,
+                       layer = &amp;quot;Land_Use_Land_Cover_LULC&amp;quot;) %&amp;gt;% 
+  st_transform(crs = 4326) %&amp;gt;% 
+  filter(landcover != 0)
+
+# there are a lot of different land cover types, group into overall categories
+
+land_cover_simple &amp;lt;- land_cover %&amp;gt;% 
+  mutate(landcover_type = case_when(
+     landcover == &amp;quot;Cropland and Pasture&amp;quot; ~ &amp;quot;Agriculture&amp;quot;,
+     landcover == &amp;quot;Commercial and Services&amp;quot; ~ &amp;quot;Developed&amp;quot;,
+     landcover == &amp;quot;Residential&amp;quot; ~ &amp;quot;Developed&amp;quot;,          
+     landcover ==&amp;quot;Evergreen Forest Land&amp;quot; ~ &amp;quot;Natural&amp;quot;,   
+     landcover ==&amp;quot;Other Urban or Built-up Land&amp;quot; ~ &amp;quot;Developed&amp;quot;,
+     landcover ==&amp;quot;Mixed Rangeland&amp;quot; ~ &amp;quot;Agriculture&amp;quot;,           
+     landcover ==&amp;quot;Industrial&amp;quot; ~ &amp;quot;Industrial&amp;quot;,                    
+     landcover ==&amp;quot;Streams and Canals&amp;quot; ~ &amp;quot;Natural&amp;quot;,      
+     landcover ==&amp;quot;Orchards, Groves, Vineyards, Nurseries and Ornamental Horticultural Areas&amp;quot; ~ &amp;quot;Agriculture&amp;quot;,
+     landcover ==&amp;quot;Shrub and Brush Rangeland&amp;quot; ~ &amp;quot;Agriculture&amp;quot;,
+     landcover ==&amp;quot;Forested Wetland&amp;quot; ~ &amp;quot;Natural&amp;quot;,        
+     landcover ==&amp;quot;Reservoirs&amp;quot; ~ &amp;quot;Water&amp;quot;,                
+     landcover ==&amp;quot;Nonforested Wetland&amp;quot; ~ &amp;quot;Natural&amp;quot;,     
+     landcover ==&amp;quot;Bare Exposed Rock&amp;quot; ~ &amp;quot;Natural&amp;quot;,       
+     landcover ==&amp;quot;Sandy Areas Other than Beaches&amp;quot; ~ &amp;quot;Natural&amp;quot;,
+     landcover ==&amp;quot;Transportation, Communications and Utilities&amp;quot; ~ &amp;quot;Industrial&amp;quot;,
+     landcover ==&amp;quot;Herbaceous Rangeland&amp;quot; ~ &amp;quot;Agriculture&amp;quot;,
+     landcover ==&amp;quot;Beaches&amp;quot; ~ &amp;quot;Natural&amp;quot;,                 
+     landcover ==&amp;quot;Other Agricultural Land&amp;quot; ~ &amp;quot;Agriculture&amp;quot;,
+     landcover ==&amp;quot;Lakes&amp;quot; ~ &amp;quot;Water&amp;quot;,                     
+     landcover ==&amp;quot;Strip Mines, Quarries, and Gravel Pits&amp;quot; ~ &amp;quot;Industrial&amp;quot;,
+     landcover ==&amp;quot;Mixed Barren Land&amp;quot; ~ &amp;quot;Natural&amp;quot;,       
+     landcover ==&amp;quot;Bays and Estuaries&amp;quot; ~ &amp;quot;Water&amp;quot;,        
+     landcover ==&amp;quot;Mixed Urban or Built-up Land&amp;quot; ~ &amp;quot;Developed&amp;quot;,
+     landcover ==&amp;quot;Transitional Areas&amp;quot; ~ &amp;quot;Developed&amp;quot;,    
+     landcover ==&amp;quot;Industrial and Commercial Complexes&amp;quot; ~ &amp;quot;Industrial&amp;quot;,  
+     landcover ==&amp;quot;Confined Feeding Operations&amp;quot; ~ &amp;quot;Agriculture&amp;quot;
+  )) %&amp;gt;% 
+  select(landcover_type)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;#plot(watersheds)
+#plot(land_cover_simple)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;hi_map_kauai &amp;lt;- ggplot() +
+  geom_sf(data = land_cover_simple,
+          aes(fill = landcover_type),
+          color = NA) +
+  scale_fill_manual(values = c(&amp;quot;peru&amp;quot;, &amp;quot;darkolivegreen&amp;quot;, &amp;quot;grey65&amp;quot;, &amp;quot;indianred4&amp;quot;, &amp;quot;cadetblue4&amp;quot;)) +
+  geom_sf(data = watersheds, fill = NA, color = 
+            &amp;quot;white&amp;quot;, size = 0.2) +
+  coord_sf(xlim = c(-159.2, -159.8), ylim = c(21.8, 22.3), expand = FALSE) +
+  theme_minimal() +
+  labs(fill = &amp;quot;Landcover Type&amp;quot;)
+
+hi_map_kauai&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/project/hawaii_spatial/index_files/figure-html/unnamed-chunk-4-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Data Sources:&lt;/strong&gt;
+Land use/land cover data: &lt;a href=&#34;http://geoportal.hawaii.gov/datasets/land-use-land-cover-lulc&#34; class=&#34;uri&#34;&gt;http://geoportal.hawaii.gov/datasets/land-use-land-cover-lulc&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Watershed data: &lt;a href=&#34;http://geoportal.hawaii.gov/datasets/watersheds&#34; class=&#34;uri&#34;&gt;http://geoportal.hawaii.gov/datasets/watersheds&lt;/a&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Time Series Analysis</title>
+      <link>/project/bonneville_fish/</link>
+      <pubDate>Thu, 09 Jan 2020 00:00:00 +0000</pubDate>
+      <guid>/project/bonneville_fish/</guid>
+      <description>
+
+
+&lt;div id=&#34;introduction&#34; class=&#34;section level4&#34;&gt;
+&lt;h4&gt;Introduction&lt;/h4&gt;
+&lt;p&gt;Steelhead are an important fish within the salmonid family, and population health and reproductive success depend on passage through Columbia River Basin.&lt;/p&gt;
+&lt;div class=&#34;figure&#34;&gt;
+&lt;img src=&#34;steelhead.png&#34; alt=&#34;Steelhead. Photo: NOAA Fisheries&#34; /&gt;
+&lt;p class=&#34;caption&#34;&gt;&lt;strong&gt;Steelhead.&lt;/strong&gt; Photo: NOAA Fisheries&lt;/p&gt;
+&lt;/div&gt;
+&lt;p&gt;Bonneville Dam was constructed in 1934, and it is the first river-wide barrier that migrating steelhead would encounter when moving upstream. When assessing the impact this blockage has had on the species, it is necessary to analyze the rates of successful salmonid passage beyond the dam over time. Understanding any trends over time related to successful passage rates will help policy makers consider the need for improved fish ladders and assistive designs.&lt;/p&gt;
+&lt;div class=&#34;figure&#34;&gt;
+&lt;img src=&#34;bonneville.jpg&#34; alt=&#34;Bonneville Dam. Photo: Britannica&#34; /&gt;
+&lt;p class=&#34;caption&#34;&gt;&lt;strong&gt;Bonneville Dam.&lt;/strong&gt; Photo: Britannica&lt;/p&gt;
+&lt;/div&gt;
+&lt;p&gt;This analysis assesses Steelhead passage time series data from the Columbia River DART program. The data is analyzes in daily, seasonal, and yearly plots in order to fully explore passage trends as salmonid spawning and travel throughout the Columbia is seasonal and often dependent on water temperatures.&lt;/p&gt;
+&lt;p&gt;Data from: Columbia Basin Research Available here: Adult fish passage (&lt;a href=&#34;http://www.cbr.washington.edu/dart/query/adult_graph_text&#34; class=&#34;uri&#34;&gt;http://www.cbr.washington.edu/dart/query/adult_graph_text&lt;/a&gt;)&lt;/p&gt;
+&lt;p&gt;Citation: Columbia River DART, Columbia Basin Research, University of Washington. (2019). Adult Passage Graphics &amp;amp; Text. Available from &lt;a href=&#34;http://www.cbr.washington.edu/dart/query/adult_graph_text&#34; class=&#34;uri&#34;&gt;http://www.cbr.washington.edu/dart/query/adult_graph_text&lt;/a&gt;&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# Load packages and read in data
+
+library(tidyverse)
+library(fable)
+library(fabletools)
+library(feasts)
+library(janitor)
+library(lubridate)
+library(forecast)
+library(paletteer)
+library(tsibble)
+
+fish &amp;lt;- read_csv(&amp;quot;cbr_fish_passage_bonneville_allyrs_steelhead.csv&amp;quot;) %&amp;gt;% 
+  clean_names() &lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# Explore the content of the dataset to check if it only contains adult steelheads
+
+unique(fish$parameter) # only contains &amp;quot;Stlhd&amp;quot;&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] &amp;quot;Stlhd&amp;quot;&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;unique(fish$datatype) # only contains &amp;quot;Adult Passage&amp;quot;&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] &amp;quot;Adult Passage&amp;quot;&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# Clean up and parse the date column to prepare for time series plots
+
+fish_dates &amp;lt;- fish %&amp;gt;% 
+  mutate(date = paste(year, mm_dd, sep = &amp;quot;-&amp;quot;)) %&amp;gt;% # all data information in one column
+  mutate(
+    year_month_day = lubridate::parse_date_time(date, &amp;quot;ydm&amp;quot;),
+    year_month_day = as.Date(year_month_day),
+    month_sep = yearmonth(year_month_day)
+    ) %&amp;gt;% # store iformation as a date, parse
+  mutate(
+    month = month(year_month_day)
+    ) %&amp;gt;% # parse just the month information
+  drop_na(month_sep) %&amp;gt;% 
+  drop_na(value) # remove NA values after skimming data to explore missingness&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# Make a daily time series plot
+
+fish_daily &amp;lt;- ggplot(data = fish_dates, aes(x = year_month_day, y = value)) +
+  geom_line(color = &amp;quot;darkolivegreen&amp;quot;) +
+  theme_minimal() +
+  xlab(&amp;quot;\nDate&amp;quot;) +
+  ylab(&amp;quot;Adult Steelhead Passage&amp;quot;) +
+  scale_y_continuous(expand = c(0,0)) +
+  labs(caption = &amp;quot;Figure 1. Daily adult steelhead passage across Bonneville Dam from 1939 to 2019&amp;quot;)
+
+fish_daily&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/project/bonneville_fish/index_files/figure-html/unnamed-chunk-4-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;The daily data for adult Steelhead passage across Bonneville Dam appears to show seasonaility, with no cyclical or long term trends. There is variation across the maximum height in each peak, which we’ll next explore by making a seasonal plot, in which passage values are aggregated by month.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# Make a season plot organized by month
+
+fish_monthly &amp;lt;- fish_dates %&amp;gt;% 
+  group_by(month, year) %&amp;gt;% # aggregating first by month, and then by year
+  summarize(monthly_total = sum(value)) # adding the passage values across the groupings
+
+fish_season_plot &amp;lt;- ggplot(data = fish_monthly, aes(x = month, y = monthly_total/1000, group = year)) +
+  geom_line(aes(color = year), alpha = 0.5, size = 0.8) +
+  theme_minimal() +
+  xlab(&amp;quot;\nMonth&amp;quot;) +
+  scale_x_discrete(limits = c(&amp;quot;1&amp;quot;, &amp;quot;2&amp;quot;, &amp;quot;3&amp;quot;, &amp;quot;4&amp;quot;, &amp;quot;5&amp;quot;, &amp;quot;6&amp;quot;, &amp;quot;7&amp;quot;, &amp;quot;8&amp;quot;, &amp;quot;9&amp;quot;, &amp;quot;10&amp;quot;, &amp;quot;11&amp;quot;, &amp;quot;12&amp;quot;)) +
+  ylab(&amp;quot;Total Steelheead Passage per Month \n(Thousands)\n&amp;quot;) +
+  guides(color = guide_legend(&amp;quot;Year (1939 - 2019)&amp;quot;)) +
+  scale_y_continuous(expand = c(0,0)) +
+  labs(caption = &amp;quot;Figure 2. Monthly Steelhead passage across Bonneville Dam&amp;quot;)
+
+fish_season_plot&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/project/bonneville_fish/index_files/figure-html/unnamed-chunk-5-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;The season plot, in which the successful passage values were aggregated by month, shows a more clear trend in the timing of fish passage. Yearly Steelhead passage appears to peak in the months of July, August, and September, though the height of the peak varies between years. Next, we’ll explore yearly trends.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# Make an annual plot
+
+fish_yearly &amp;lt;- fish_dates %&amp;gt;% 
+  group_by(year) %&amp;gt;% 
+  summarize(yearly_total = sum(value))
+
+annual_plot &amp;lt;- ggplot(fish_yearly, aes(x = year, y = yearly_total/1000)) +
+  geom_line(color = &amp;quot;darkolivegreen&amp;quot;) +
+  theme_minimal() +
+  xlab(&amp;quot;\nYear&amp;quot;) +
+  ylab(&amp;quot;Steelhead Passage \n (Thousands)\n&amp;quot;) +
+  scale_x_continuous(expand = c(0,0), limits = c(1939, 2020)) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  scale_y_continuous(expand = c(0,0)) +
+  labs(caption = &amp;quot;Figure 3. Yearly Steelhead passage across Bonneville Dam from 1939 to 2019&amp;quot;)
+
+annual_plot&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/project/bonneville_fish/index_files/figure-html/unnamed-chunk-6-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;Aggregated by year, Steelhead passage does not seem to follow an overall trend or cyclicality. Successful passage appears to have increased in the early 2000s, before experiencing a sharp decline in more recent years.&lt;/p&gt;
+&lt;/div&gt;
+</description>
+    </item>
+    
+    <item>
       <title>Writing technical content in Academic</title>
       <link>/post/writing-technical-content/</link>
       <pubDate>Fri, 12 Jul 2019 00:00:00 +0000</pubDate>
@@ -509,7 +790,7 @@ Three
     </item>
     
     <item>
-      <title>External Project</title>
+      <title>Bren School Master&#39;s Thesis Group Project</title>
       <link>/project/external-project/</link>
       <pubDate>Wed, 27 Apr 2016 00:00:00 +0000</pubDate>
       <guid>/project/external-project/</guid>
