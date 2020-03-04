@@ -13,7 +13,7 @@
     </image>
     
     <item>
-      <title>Principal Components Analysis</title>
+      <title>Principal Component Analysis</title>
       <link>/project/pca/</link>
       <pubDate>Thu, 09 Jan 2020 00:00:00 +0000</pubDate>
       <guid>/project/pca/</guid>
@@ -182,6 +182,18 @@ Land use/land cover data: &lt;a href=&#34;http://geoportal.hawaii.gov/datasets/l
     </item>
     
     <item>
+      <title>Strategically Siting Multi-Benefit Groundwater Recharge Projects</title>
+      <link>/project/thesis_project/</link>
+      <pubDate>Thu, 09 Jan 2020 00:00:00 +0000</pubDate>
+      <guid>/project/thesis_project/</guid>
+      <description>
+
+
+&lt;p&gt;Put GP info here&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
       <title>Time Series Analysis</title>
       <link>/project/bonneville_fish/</link>
       <pubDate>Thu, 09 Jan 2020 00:00:00 +0000</pubDate>
@@ -291,14 +303,6 @@ annual_plot&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;Aggregated by year, Steelhead passage does not seem to follow an overall trend or cyclicality. Successful passage appears to have increased in the early 2000s, before experiencing a sharp decline in more recent years.&lt;/p&gt;
 &lt;/div&gt;
 </description>
-    </item>
-    
-    <item>
-      <title>Bren School Master&#39;s Thesis Group Project</title>
-      <link>/project/external-project/</link>
-      <pubDate>Wed, 27 Apr 2016 00:00:00 +0000</pubDate>
-      <guid>/project/external-project/</guid>
-      <description></description>
     </item>
     
   </channel>

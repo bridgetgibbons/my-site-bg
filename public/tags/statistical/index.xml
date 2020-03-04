@@ -13,7 +13,7 @@
     </image>
     
     <item>
-      <title>Principal Components Analysis</title>
+      <title>Principal Component Analysis</title>
       <link>/project/pca/</link>
       <pubDate>Thu, 09 Jan 2020 00:00:00 +0000</pubDate>
       <guid>/project/pca/</guid>
@@ -93,6 +93,18 @@ final_pca_plot&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;Reference:
 &lt;br&gt;
 &lt;span class=&#34;citation&#34;&gt;@zander_venter&lt;/span&gt; on Kaggle, data from Google Earth Engine (&lt;a href=&#34;https://earthengine.google.com/&#34; class=&#34;uri&#34;&gt;https://earthengine.google.com/&lt;/a&gt;).&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Strategically Siting Multi-Benefit Groundwater Recharge Projects</title>
+      <link>/project/thesis_project/</link>
+      <pubDate>Thu, 09 Jan 2020 00:00:00 +0000</pubDate>
+      <guid>/project/thesis_project/</guid>
+      <description>
+
+
+&lt;p&gt;Put GP info here&lt;/p&gt;
 </description>
     </item>
     

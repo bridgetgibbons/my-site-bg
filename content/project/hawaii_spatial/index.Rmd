@@ -13,7 +13,7 @@ authors: []
 lastmod: '2020-01-09T15:02:28-08:00'
 featured: no
 image:
-  caption: ''
+  caption: 'Associated Press'
   focal_point: ''
   preview_only: no
 projects: []

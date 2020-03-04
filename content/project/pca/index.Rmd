@@ -1,5 +1,5 @@
 ---
-title: Principal Components Analysis
+title: Principal Component Analysis
 author: ''
 date: '2020-01-09'
 slug: pca
@@ -7,12 +7,12 @@ categories: []
 tags:
   - statistical
 subtitle: 'Exploring climactic and environmental variables and the relationship to a countrys agricutural practices and city access'
-summary: 'Exploring variance among selected variables'
+summary: 'Exploring variance among climatic variables related to agriculture'
 authors: []
 lastmod: '2020-01-09T15:02:28-08:00'
 featured: no
 image:
-  caption: ''
+  caption: 'Effective Farming Solutions'
   focal_point: ''
   preview_only: no
 projects: []
