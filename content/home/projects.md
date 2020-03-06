@@ -32,14 +32,15 @@ subtitle = ""
   [[content.filter_button]]
     name = "Water Related"
     tag = "water"
+
+  [[content.filter_button]]
+    name = "Statistical Analysis"
+    tag = "statistical"
   
   [[content.filter_button]]
     name = "Spatial Analysis"
     tag = "spatial"
 
-  [[content.filter_button]]
-    name = "Statistical Analysis"
-    tag = "statistical"
 
 [design]
   # Choose how many columns the section has. Valid values: 1 or 2.

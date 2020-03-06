@@ -16,9 +16,9 @@ height = "500px"
 # Slides.
 # Duplicate an `[[item]]` block to add more slides.
 [[item]]
-  title = ""
-  content = ""
-  align = "center"  # Choose `center`, `left`, or `right`.
+  title = "Western Water Management"
+  content = "Data Science | Policy Analysis | Communication"
+  align = "left"  # Choose `center`, `left`, or `right`.
 
   # Overlay a color or image (optional).
   #   Deactivate an option by commenting out the line, prefixing it with `#`.
@@ -35,18 +35,18 @@ height = "500px"
   # cta_icon = "graduation-cap"
 
 [[item]]
-  title = ""
-  content = ""
-  align = "center"
+  title = "Western Water Management"
+  content = "Data Science | Policy Analysis | Communication"
+  align = "left"
 
   overlay_color = "#555"  # An HTML color value.
   overlay_img = "headers/kern.JPG"  # Image path relative to your `static/img/` folder.
   overlay_filter = 0  # Darken the image. Value in range 0-1.
 
 [[item]]
-  title = ""
-  content = ""
-  align = "center"
+  title = "Western Water Management"
+  content = "Data Science | Policy Analysis | Communication"
+  align = "left"
 
   overlay_color = "#333"  # An HTML color value.
   overlay_img = "headers/canal4.jpg"  # Image path relative to your `static/img/` folder.
