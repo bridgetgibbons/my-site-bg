@@ -9,7 +9,7 @@ tags:
   - spatial
   - water
   - thesis
-subtitle: 'Bren School Masters Thesis'
+subtitle: 'Development of a geostatistical decision support tool for Groundwater Sustainability Agencies in Californias Central Valley'
 summary: 'Bren School Masters Thesis'
 authors: []
 lastmod: '2020-01-09T15:02:28-08:00'
@@ -17,10 +17,72 @@ featured: no
 image:
   caption: ''
   focal_point: ''
-  preview_only: no
+  preview_only: yes
 projects: []
 ---
 
 
 
-<p>Put GP info here</p>
+<p>California is heavily reliant on groundwater to support agriculture, industry and municipalities. This is particularly true in drought years, when up to 70% of water used for irrigation is sourced from groundwater (1). Prolonged unsustainable groundwater extraction has resulted in the deterioration of groundwater aquifers throughout the state. In the 21 groundwater basins deemed critically overdrafted by California’s Department of Water Resources, a sustained condition of outflows that are greater than inflows has caused declining groundwater levels and loss of groundwater storage (2).</p>
+<p>The Sustainable Groundwater Management Act (SGMA), passed by the California Legislature in 2014, requires that groundwater basins with historic patterns of unsustainable extraction design and implement plans to reach sustainability by 2040 (3–5). Within these plans, Groundwater Sustainability Agencies are encouraged to identify projects and management actions that will be implemented to augment groundwater supply or reduce groundwater demand within their basin in order to balance pumping and recharge (6).</p>
+<p>Managed aquifer recharge is one method that many Groundwater Sustainability Agencies will be utilizing to reach sustainability and rebalance aquifer levels. Groundwater recharge can be broadly defined as the “downward flow of water reaching the groundwater table, adding to groundwater storage” (7). Recharge can happen naturally, as precipitation infiltrates into permeable soils and percolates into the underlying aquifer, or in an intentional manner through the construction of injection wells or infiltration basins.</p>
+<p>Currently, groundwater managers lack the tools and information necessary to identify recharge locations within their basins that are suitable to implement managed recharge at more than a surficial level. The most commonly used assessment tool for planning and siting groundwater recharge is the Soil Agricultural Groundwater Banking Index (SAGBI) which focuses on considerations of recharge suitability within the top 6 feet of the soil subsurface (8). There is no publicly available, widely applicable tool to help inform the placement of groundwater recharge projects that considers benefits other than those directly related to water infiltration in the ground surface.</p>
+<p>We created a decision support tool using ArcMap Model Builder that can be used by Groundwater Sustainability Agencies (GSAs) to strategically site groundwater recharge projects that best achieve multiple benefits.</p>
+<div class="figure">
+<img src="schemattic.png" alt="Figure 1: Decision Support Tool Schematic " id="id" class="class" width="600" height="600" />
+<p class="caption"><strong>Figure 1: Decision Support Tool Schematic</strong> </p>
+</div>
+<p>The tool considers recharge suitability at the ground surface through the inclusion of the Soil Agricultural Groundwater Banking Index (SAGBI), developed by researchers at the University of California, Davis (9). We add to this work through the inclusion of subsurface characteristics that could impact the efficacy of recharge projects, including the depth to groundwater, percent of coarse soil materials to a depth of 250 feet below the ground surface, and the depth and thickness of the Corcoran clay, a low permeability layer found throughout much of the Central Valley that can inhibit recharge (9–12).</p>
+<div class="figure">
+<img src="surface_subsurface.png" alt="Figure 2: Surface and subsurface conditions in the Madera Subbasin. The Madera Subbasin was used as a test case when developing the decision support tool. Results shown for the Madera basin are illustrative of the type of output available to groundwater managers in any Central Valley Basin. Locations are ranked from better (dark green) to worse (dark red) for recharge projects. " id="id" class="class" width="400" height="400" />
+<p class="caption"><strong>Figure 2: Surface and subsurface conditions in the Madera Subbasin.</strong> The Madera Subbasin was used as a test case when developing the decision support tool. Results shown for the Madera basin are illustrative of the type of output available to groundwater managers in any Central Valley Basin. Locations are ranked from better (dark green) to worse (dark red) for recharge projects. </p>
+</div>
+<p>We also include a consideration of water quality in the tool, by accounting for surficial nitrogen balances that pose a risk of leaching nitrates into groundwater. By prioritizing locations with less intensive historic and projected nitrogen accumulation in the soils, a recharge project is less likely to introduce new contamination into groundwater and with sufficient water applied, may dilute existing contamination to improve water quality (13).</p>
+<div class="figure">
+<img src="nitrogen.png" alt="Figure 3: Surficial nitrogen balances for the Madera Subbasin. The surficial nitrogen balance was calculated by combining information related to nitrogen additions and losses for 1990, 2005, and 2020. Better areas (dark green) have lower nitrogen balances, and are less likely to introduce nitrate contamination into the groundwater than areas ranked as worse (dark red). " id="id" class="class" width="400" height="400" />
+<p class="caption"><strong>Figure 3: Surficial nitrogen balances for the Madera Subbasin.</strong> The surficial nitrogen balance was calculated by combining information related to nitrogen additions and losses for 1990, 2005, and 2020. Better areas (dark green) have lower nitrogen balances, and are less likely to introduce nitrate contamination into the groundwater than areas ranked as worse (dark red). </p>
+</div>
+<p>In addition to a consideration of surface and subsurface conditions and water quality, we designed the decision support tool to allow a user to consider additional benefits that can be achieved through recharge projects, along with feasibility considerations related to initial project construction and cost. The additional benefits in the decision support tool include the ability of groundwater recharge projects to augment water supplies near shallow, domestic drinking water wells that have run dry, and the ability of a project to support potential groundwater dependent ecosystems (GDEs). We also incorporate the feasibility considerations of proximity of a potential recharge project location to existing water conveyance infrastructure included in the National Hydrography Dataset.</p>
+<p>The result of our research is a Central Valley wide, transferable, publicly available decision support tool that can be used to identify areas best suited for achieving multiple benefits from groundwater recharge projects within a specified groundwater basin. The tool prioritizes areas within a basin that have conditions best suited to allow water to infiltrate and percolate into the underlying aquifers while presenting the least risk to adding nitrate contamination to the groundwater.</p>
+<div class="figure">
+<img src="recommended.png" alt="Figure 4: Recommended recharge locations for the Madera Subbasin. Recommended recharge locations are the top 10% of sites in the subbasin that have current land uses that could facilitate groundwater recharge. Recommended locations are the best areas within the basin for getting clean water into the aquifer. " id="id" class="class" width="400" height="400" />
+<p class="caption"><strong>Figure 4: Recommended recharge locations for the Madera Subbasin.</strong> Recommended recharge locations are the top 10% of sites in the subbasin that have current land uses that could facilitate groundwater recharge. Recommended locations are the best areas within the basin for getting clean water into the aquifer. </p>
+</div>
+<div class="figure">
+<img src="featured.jpg" alt="Figure 5: Suitable recharge locations for the Central Valley. Though results have been demonstrated for the Madera Subbasin as a test case, the decision support tool can be utilized in any groundwater basin in the Central Valley. " id="id" class="class" width="300" height="900" />
+<p class="caption"><strong>Figure 5: Suitable recharge locations for the Central Valley.</strong> Though results have been demonstrated for the Madera Subbasin as a test case, the decision support tool can be utilized in any groundwater basin in the Central Valley. </p>
+</div>
+<p>The tool also allows for flexibility in determining the relative importance of the available benefit and feasibility considerations, such that the outputs can be customized to fit the interests and priorities of an individual basin. This functionality allows for the exploration of many scenarios and benefit schemes to assist in the optimal siting of groundwater recharge projects on a basin specific scale.</p>
+<div class="figure">
+<img src="engineer.png" alt="Figure 6: Preferred multiple benefit recharge project locations. The decision support tool outputs can be customized by the user based on local priorities. Users can selectively weight a project’s proximity to existing water conveyance infrastructure, groundwater dependent ecosystems, and domestic drinking water wells that have run dry. A user can also prioritize a project’s distance from a listed contamination site. These sites are identified as preferred for their ability to provide additional benefits of groundwater recharge. Locations are ranked within the recommended recharge locations (top 10% in the basin) from most preferred according to the user priorities (dark orange) to least preferred (yellow)." id="id" class="class" width="400" height="400" />
+<p class="caption"><strong>Figure 6: Preferred multiple benefit recharge project locations.</strong> The decision support tool outputs can be customized by the user based on local priorities. Users can selectively weight a project’s proximity to existing water conveyance infrastructure, groundwater dependent ecosystems, and domestic drinking water wells that have run dry. A user can also prioritize a project’s distance from a listed contamination site. These sites are identified as preferred for their ability to provide additional benefits of groundwater recharge. Locations are ranked within the recommended recharge locations (top 10% in the basin) from most preferred according to the user priorities (dark orange) to least preferred (yellow).</p>
+</div>
+<p>Implementation of the Sustainable Groundwater Management Act over the next twenty years is likely to include a substantial increase in the size and number of groundwater recharge efforts throughout critically overdrafted groundwater basins in the Central Valley. Our decision support tool adds depth and breadth to existing knowledge regarding the best areas to locate groundwater recharge projects in order to capitalize on the opportunity to design projects that benefit communities, ecosystems, and the long-term sustainability of water resources.</p>
+<p>For additional project information, please visit: <a href="https://waterresilience.wixsite.com/waterresilienceca" class="uri">https://waterresilience.wixsite.com/waterresilienceca</a></p>
+<p>References:
+<br>
+1. Marston L, Konar M. Drought impacts to water footprints and virtual water transfers of the Central Valley of California [Internet]. 2017 [cited 2019 Apr 27]. Available from: <a href="https://agupubs.onlinelibrary.wiley.com/doi/10.1002/2016WR020251" class="uri">https://agupubs.onlinelibrary.wiley.com/doi/10.1002/2016WR020251</a>
+<br>
+2. California Department of Water Resources. California’s Groundwater - Bulletin 118 Interim Update [Internet]. 2016 Dec. Available from: <a href="https://water.ca.gov/-/media/DWR-Website/Web-Pages/Programs/Groundwater-Management/Bulletin-118/Files/B118-Interim-Update-2016_ay_19.pdf" class="uri">https://water.ca.gov/-/media/DWR-Website/Web-Pages/Programs/Groundwater-Management/Bulletin-118/Files/B118-Interim-Update-2016_ay_19.pdf</a>
+<br>
+3. Pavley. SB-1319 Groundwater. [Internet]. BB 1319 Sep 16, 2014. Available from: <a href="http://leginfo.legislature.ca.gov/faces/billNavClient.xhtml?bill_id=201320140SB1319" class="uri">http://leginfo.legislature.ca.gov/faces/billNavClient.xhtml?bill_id=201320140SB1319</a>
+<br>
+4. Pavley. SB-1168 Groundwater management. [Internet]. SB 1168 Sep 16, 2014. Available from: <a href="http://leginfo.legislature.ca.gov/faces/billNavClient.xhtml?bill_id=201320140SB1168" class="uri">http://leginfo.legislature.ca.gov/faces/billNavClient.xhtml?bill_id=201320140SB1168</a>
+<br>
+5. Dickinson. AB-1739 Groundwater management [Internet]. AB 1739 Sep 16, 2014. Available from: <a href="http://leginfo.legislature.ca.gov/faces/billNavClient.xhtml?bill_id=201320140AB1739" class="uri">http://leginfo.legislature.ca.gov/faces/billNavClient.xhtml?bill_id=201320140AB1739</a>
+<br>
+6. Pavley, Dickinson. Sustainable Groundwater Management Act [Internet]. Water Code - Division 6: Conservation, Development and Utilization of State Water Resources Jan 1, 2015. Available from: <a href="http://leginfo.legislature.ca.gov/faces/codes_displayText.xhtml?lawCode=WAT&amp;division=6.&amp;title=&amp;part=2.74.&amp;chapter=6.&amp;article=" class="uri">http://leginfo.legislature.ca.gov/faces/codes_displayText.xhtml?lawCode=WAT&amp;division=6.&amp;title=&amp;part=2.74.&amp;chapter=6.&amp;article=</a>
+<br>
+7. Healy RW, Scanlon BR. Estimating groundwater recharge [Internet]. 2010 [cited 2020 Feb 21]. Available from: <a href="https://pubs.er.usgs.gov/publication/70189200" class="uri">https://pubs.er.usgs.gov/publication/70189200</a>
+<br>
+8. O’Geen A, Saal M, Dahlke H, Doll D, Elkins R, Fulton A, et al. Soil suitability index identifies potential areas for groundwater banking on agricultural lands. Calif Agric. 2015 Apr 1;69(2):75–84.
+<br>
+9. United States Geological Survey. USGS Water Resources NSDI Node | Contours of Corcoran Clay Thickness in feet by Page (1986) for the Central Valley Hydrologic Model (CVHM) [Internet]. [cited 2020 Feb 19]. Available from: <a href="https://water.usgs.gov/GIS/metadata/usgswrd/XML/pp1766_corcoran_clay_thickness_feet.xml" class="uri">https://water.usgs.gov/GIS/metadata/usgswrd/XML/pp1766_corcoran_clay_thickness_feet.xml</a>
+<br>
+10. United States Geological Survey. USGS Water Resources NSDI Node | Contours of Corcoran Clay Depth in feet from Page (1986) for the Central Valley Hydrologic Model (CVHM) [Internet]. [cited 2020 Feb 19]. Available from: <a href="https://water.usgs.gov/GIS/metadata/usgswrd/XML/pp1766_corcoran_clay_depth_feet.xml" class="uri">https://water.usgs.gov/GIS/metadata/usgswrd/XML/pp1766_corcoran_clay_depth_feet.xml</a>
+<br>
+11. California Department of Water Resources. Groundwater Information Center Interactive Map Application [Internet]. [cited 2020 Feb 19]. Available from: <a href="https://gis.water.ca.gov/app/gicima/" class="uri">https://gis.water.ca.gov/app/gicima/</a>
+<br>
+12. Faunt CC, Belitz K, Hanson RT. Development of a three-dimensional model of sedimentary texture in valley-fill deposits of Central Valley, California, USA. Hydrogeol J. 2010 May;18(3):625–49.
+<br>
+13. Bastani M, Harter T. Source area management practices as remediation tool to address groundwater nitrate pollution in drinking supply wells. J Contam Hydrol. 2019 Oct;226:103521.</p>

@@ -1,0 +1,170 @@
+---
+title: Analyzing Population Sampling Statistics
+author: ''
+date: '2020-01-09'
+slug: snowshoe_hare
+categories: []
+tags:
+  - statistical
+subtitle: 'Summarizing and visualizing trends in Snowshoe Hare populations in the Tanana Valley from 2008-2012'
+summary: 'Exploring trends in Snowshoe Hare populations in the Tanana Valley'
+authors: []
+lastmod: '2020-01-09T15:02:28-08:00'
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+projects: []
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      message = FALSE,
+                      warning = FALSE)
+```
+
+```{r}
+# Load packages
+
+library(tidyverse)
+library(janitor)
+library(kableExtra)
+library(lubridate)
+library(ggfortify)
+library(tidyr)
+
+```
+
+
+<br> 
+
+Snowshoe hares are a keystone species that live in northern boreal forests. Previously, studies of snowshoe hares have been qualitative in nature, and have focused on population responses to vegetation and predators. This analysis incorporates data from capture-recapture studies that were conducted in the Tanana Valley, within the Bonanza Creek Experimental Forest. Snowshoe hare populations generally experience fluctuations on a timeline of 8 - 11 years. The following analysis focuses on the five-year period from 2008-2012, highlighting the counts and average weights of male and female hares at two sampling sites, along with the average sizes of the snowshoe hares' signature large hind foot (Table 1, Figure 1) (Kielland, Chapin & Ruess, 2017). 
+
+<br>
+
+![Image of a snowshoe hare with its signature hind foot. Image source: Northwest Wildlife (http://www.northwestwildlife.com/learn/species-reports/snowshoe-hare/).](hare_photo.png)
+
+
+<br>
+
+
+```{r}
+# Read in the data, retain columns for grid, sex, and weight. 
+
+hares <- read_csv("showshoe_lter.csv") %>% # Read in data
+  mutate(date = mdy(date)) %>% # transform the date data into a usable format
+  separate(date, into = c("year", "month", "day", sep = "-")) %>%  # separate the date into three columns  
+  mutate(grid = str_to_lower(grid),
+         sex = str_to_lower(sex)) %>%  # make grid and sex all lower case
+  filter(
+    sex == "m" | sex == "f"
+  ) # retain only data that is certainly male or female
+  
+```
+
+```{r}
+# explore data
+
+#summary(hares)
+
+```
+
+
+```{r}
+# make exploratory graphs
+
+explore_plot <- ggplot(data = hares, aes(x = weight, y = hindft)) +
+  geom_point(aes(color = sex)) +
+  facet_wrap(~grid)
+
+# not sure about this as something interesting to present
+
+# not very many observations at bonmat, more at the other two grid locations
+
+```
+
+```{r}
+
+# clean up the dataset a bit more
+
+hares_clean <- hares %>% 
+  select(year, grid, sex, weight, hindft) %>% 
+  filter(
+    grid == "bonrip" | grid == "bonbs"
+    ) %>% #keep just the two grids of inteerest
+  filter(
+    year == "2008" | year == "2009" | year == "2010" | year == "2011" | year == "2012"
+    ) #keep just the years of interest, this exploration is just showing recent trends
+
+
+hares_nona <- hares_clean %>% 
+  drop_na() # remove NA values from the dataset
+
+```
+
+```{r, include = FALSE}
+# Create summary table for more more data exploration, grouped by the grid and sex. Report the number of hare observations and the average weight for each group. Is this interesting? 
+
+# Add in hind foot data, since that's what they are known for
+
+hare_first_table <- hares_nona %>% 
+  group_by(year, grid, sex) %>% 
+  summarize(
+    count = length(sex),
+    avg_weight = round(mean(weight), digits = 0),
+    avg_hindft = round(mean(hindft), digits = 0)
+  )
+
+#hare_first_table
+
+# this is a big table, limit to more recent years to highlight the trend
+
+
+```
+
+**Table 1. Summary Statistics for Snowshow Hares at Two Monitoring Points within the Bonanza Creek Experimental Forest from 2008 to 2012.** Observed counts at sites BonRip and BonBS for males and females, along with average weights and hind foot sizes, are reported for each period.
+```{r}
+
+# Make the table look nice
+
+hare_final_table <- kable(hare_first_table, col.names = c("Year", "Grid Name","Sex","Hare Count", "Average Weight", "Average Hind Foot Size"), align = "c") %>% 
+  add_header_above(c("", "Snowshoe Hare Statistics" = 4, "")) %>% 
+  kable_styling(bootstrap_options = "striped", full_width = F, position = "left") %>% 
+  footnote(symbol = c("Data Source: Environmental Data Initiative. https://doi.org/10.6073/pasta/03dce4856d79b91557d8e6ce2cbcdc14"))
+
+hare_final_table
+
+
+```
+
+
+```{r}
+
+# make final plot
+
+hares_plot <- ggplot(hare_first_table, aes(x = year, y = count, group = sex)) +
+  geom_line(aes(color = sex)) +
+  geom_point(aes(color = sex, size = avg_hindft), alpha = 0.5) +
+  facet_wrap(~ grid, scales = "free") +
+  theme_minimal() +
+  labs(x = "Year", y = "Snowshoe Hare Count") +
+  labs(color = "Sex", size = "Average Hind Foot Size") +
+  theme(legend.position = "bottom")
+
+hares_plot
+```
+
+**Figure 1. Snowshoe Hare Observations in the Bonanza Creek Experimental Forest from 2008 - 2012. ** Count for males and female snowshoe hares, organized by sampling grid locations. Points represent the average hind foot size for each observation.
+
+<br> 
+
+Snowshoe hare populations at the BonBS sampling site increased significantly between 2008 and 2009, before declining sharply in 2010 and continuing to decline through 2012 to counts of approximately 20 for both males and females. At the BonRip sampling grid, male counts steadily declined from 2008 to 2012, while females remained in higher numbers to 2011 before sharply declining in 2012. At BonRip, both males and female counts were near 0 at the end of the study period. Despite the volatility in hare counts, average hind foot size remained relatively constant, and no discernible relationship with count could be determined.
+
+<br>
+
+Reference:             
+
+Kielland K., F. S. Chapin, R. W. Ruess. 2017. Snowshoe hare physical data in Bonanza Creek Experimental Forest: 1999-Present. Environmental Data Initiative. https://doi.org/10.6073/pasta/03dce4856d79b91557d8e6ce2cbcdc14. 
+
+

@@ -13,6 +13,542 @@
     </image>
     
     <item>
+      <title>Analyzing Population Sampling Statistics</title>
+      <link>/project/snowshoe_hare/</link>
+      <pubDate>Thu, 09 Jan 2020 00:00:00 +0000</pubDate>
+      <guid>/project/snowshoe_hare/</guid>
+      <description>
+&lt;script src=&#34;/rmarkdown-libs/kePrint/kePrint.js&#34;&gt;&lt;/script&gt;
+
+
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# Load packages
+
+library(tidyverse)
+library(janitor)
+library(kableExtra)
+library(lubridate)
+library(ggfortify)
+library(tidyr)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;br&gt;&lt;/p&gt;
+&lt;p&gt;Snowshoe hares are a keystone species that live in northern boreal forests. Previously, studies of snowshoe hares have been qualitative in nature, and have focused on population responses to vegetation and predators. This analysis incorporates data from capture-recapture studies that were conducted in the Tanana Valley, within the Bonanza Creek Experimental Forest. Snowshoe hare populations generally experience fluctuations on a timeline of 8 - 11 years. The following analysis focuses on the five-year period from 2008-2012, highlighting the counts and average weights of male and female hares at two sampling sites, along with the average sizes of the snowshoe hares’ signature large hind foot (Table 1, Figure 1) (Kielland, Chapin &amp;amp; Ruess, 2017).&lt;/p&gt;
+&lt;p&gt;&lt;br&gt;&lt;/p&gt;
+&lt;div class=&#34;figure&#34;&gt;
+&lt;img src=&#34;hare_photo.png&#34; alt=&#34;Image of a snowshoe hare with its signature hind foot. Image source: Northwest Wildlife (http://www.northwestwildlife.com/learn/species-reports/snowshoe-hare/).&#34; /&gt;
+&lt;p class=&#34;caption&#34;&gt;Image of a snowshoe hare with its signature hind foot. Image source: Northwest Wildlife (&lt;a href=&#34;http://www.northwestwildlife.com/learn/species-reports/snowshoe-hare/&#34; class=&#34;uri&#34;&gt;http://www.northwestwildlife.com/learn/species-reports/snowshoe-hare/&lt;/a&gt;).&lt;/p&gt;
+&lt;/div&gt;
+&lt;p&gt;&lt;br&gt;&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# Read in the data, retain columns for grid, sex, and weight. 
+
+hares &amp;lt;- read_csv(&amp;quot;showshoe_lter.csv&amp;quot;) %&amp;gt;% # Read in data
+  mutate(date = mdy(date)) %&amp;gt;% # transform the date data into a usable format
+  separate(date, into = c(&amp;quot;year&amp;quot;, &amp;quot;month&amp;quot;, &amp;quot;day&amp;quot;, sep = &amp;quot;-&amp;quot;)) %&amp;gt;%  # separate the date into three columns  
+  mutate(grid = str_to_lower(grid),
+         sex = str_to_lower(sex)) %&amp;gt;%  # make grid and sex all lower case
+  filter(
+    sex == &amp;quot;m&amp;quot; | sex == &amp;quot;f&amp;quot;
+  ) # retain only data that is certainly male or female&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# explore data
+
+#summary(hares)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# make exploratory graphs
+
+explore_plot &amp;lt;- ggplot(data = hares, aes(x = weight, y = hindft)) +
+  geom_point(aes(color = sex)) +
+  facet_wrap(~grid)
+
+# not sure about this as something interesting to present
+
+# not very many observations at bonmat, more at the other two grid locations&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# clean up the dataset a bit more
+
+hares_clean &amp;lt;- hares %&amp;gt;% 
+  select(year, grid, sex, weight, hindft) %&amp;gt;% 
+  filter(
+    grid == &amp;quot;bonrip&amp;quot; | grid == &amp;quot;bonbs&amp;quot;
+    ) %&amp;gt;% #keep just the two grids of inteerest
+  filter(
+    year == &amp;quot;2008&amp;quot; | year == &amp;quot;2009&amp;quot; | year == &amp;quot;2010&amp;quot; | year == &amp;quot;2011&amp;quot; | year == &amp;quot;2012&amp;quot;
+    ) #keep just the years of interest, this exploration is just showing recent trends
+
+
+hares_nona &amp;lt;- hares_clean %&amp;gt;% 
+  drop_na() # remove NA values from the dataset&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;strong&gt;Table 1. Summary Statistics for Snowshow Hares at Two Monitoring Points within the Bonanza Creek Experimental Forest from 2008 to 2012.&lt;/strong&gt; Observed counts at sites BonRip and BonBS for males and females, along with average weights and hind foot sizes, are reported for each period.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# Make the table look nice
+
+hare_final_table &amp;lt;- kable(hare_first_table, col.names = c(&amp;quot;Year&amp;quot;, &amp;quot;Grid Name&amp;quot;,&amp;quot;Sex&amp;quot;,&amp;quot;Hare Count&amp;quot;, &amp;quot;Average Weight&amp;quot;, &amp;quot;Average Hind Foot Size&amp;quot;), align = &amp;quot;c&amp;quot;) %&amp;gt;% 
+  add_header_above(c(&amp;quot;&amp;quot;, &amp;quot;Snowshoe Hare Statistics&amp;quot; = 4, &amp;quot;&amp;quot;)) %&amp;gt;% 
+  kable_styling(bootstrap_options = &amp;quot;striped&amp;quot;, full_width = F, position = &amp;quot;left&amp;quot;) %&amp;gt;% 
+  footnote(symbol = c(&amp;quot;Data Source: Environmental Data Initiative. https://doi.org/10.6073/pasta/03dce4856d79b91557d8e6ce2cbcdc14&amp;quot;))
+
+hare_final_table&lt;/code&gt;&lt;/pre&gt;
+&lt;table class=&#34;table table-striped&#34; style=&#34;width: auto !important; &#34;&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th style=&#34;border-bottom:hidden&#34; colspan=&#34;1&#34;&gt;
+&lt;/th&gt;
+&lt;th style=&#34;border-bottom:hidden; padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; &#34; colspan=&#34;4&#34;&gt;
+&lt;div style=&#34;border-bottom: 1px solid #ddd; padding-bottom: 5px; &#34;&gt;
+Snowshoe Hare Statistics
+&lt;/div&gt;
+&lt;/th&gt;
+&lt;th style=&#34;border-bottom:hidden&#34; colspan=&#34;1&#34;&gt;
+&lt;/th&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;th style=&#34;text-align:center;&#34;&gt;
+Year
+&lt;/th&gt;
+&lt;th style=&#34;text-align:center;&#34;&gt;
+Grid Name
+&lt;/th&gt;
+&lt;th style=&#34;text-align:center;&#34;&gt;
+Sex
+&lt;/th&gt;
+&lt;th style=&#34;text-align:center;&#34;&gt;
+Hare Count
+&lt;/th&gt;
+&lt;th style=&#34;text-align:center;&#34;&gt;
+Average Weight
+&lt;/th&gt;
+&lt;th style=&#34;text-align:center;&#34;&gt;
+Average Hind Foot Size
+&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:center;&#34;&gt;
+2008
+&lt;/td&gt;
+&lt;td style=&#34;text-align:center;&#34;&gt;
+bonbs
+&lt;/td&gt;
+&lt;td style=&#34;text-align:center;&#34;&gt;
+f
+&lt;/td&gt;
+&lt;td style=&#34;text-align:center;&#34;&gt;
+49
+&lt;/td&gt;
+&lt;td style=&#34;text-align:center;&#34;&gt;
+1287
+&lt;/td&gt;
+&lt;td style=&#34;text-align:center;&#34;&gt;
+131
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:center;&#34;&gt;
+2008
+&lt;/td&gt;
+&lt;td style=&#34;text-align:center;&#34;&gt;
+bonbs
+&lt;/td&gt;
+&lt;td style=&#34;text-align:center;&#34;&gt;
+m
+&lt;/td&gt;
+&lt;td style=&#34;text-align:center;&#34;&gt;
+50
+&lt;/td&gt;
+&lt;td style=&#34;text-align:center;&#34;&gt;
+1358
+&lt;/td&gt;
+&lt;td style=&#34;text-align:center;&#34;&gt;
+134
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:center;&#34;&gt;
+2008
+&lt;/td&gt;
+&lt;td style=&#34;text-align:center;&#34;&gt;
+bonrip
+&lt;/td&gt;
+&lt;td style=&#34;text-align:center;&#34;&gt;
+f
+&lt;/td&gt;
+&lt;td style=&#34;text-align:center;&#34;&gt;
+38
+&lt;/td&gt;
+&lt;td style=&#34;text-align:center;&#34;&gt;
+1389
+&lt;/td&gt;
+&lt;td style=&#34;text-align:center;&#34;&gt;
+133
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:center;&#34;&gt;
+2008
+&lt;/td&gt;
+&lt;td style=&#34;text-align:center;&#34;&gt;
+bonrip
+&lt;/td&gt;
+&lt;td style=&#34;text-align:center;&#34;&gt;
+m
+&lt;/td&gt;
+&lt;td style=&#34;text-align:center;&#34;&gt;
+26
+&lt;/td&gt;
+&lt;td style=&#34;text-align:center;&#34;&gt;
+1364
+&lt;/td&gt;
+&lt;td style=&#34;text-align:center;&#34;&gt;
+134
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:center;&#34;&gt;
+2009
+&lt;/td&gt;
+&lt;td style=&#34;text-align:center;&#34;&gt;
+bonbs
+&lt;/td&gt;
+&lt;td style=&#34;text-align:center;&#34;&gt;
+f
+&lt;/td&gt;
+&lt;td style=&#34;text-align:center;&#34;&gt;
+85
+&lt;/td&gt;
+&lt;td style=&#34;text-align:center;&#34;&gt;
+1243
+&lt;/td&gt;
+&lt;td style=&#34;text-align:center;&#34;&gt;
+132
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:center;&#34;&gt;
+2009
+&lt;/td&gt;
+&lt;td style=&#34;text-align:center;&#34;&gt;
+bonbs
+&lt;/td&gt;
+&lt;td style=&#34;text-align:center;&#34;&gt;
+m
+&lt;/td&gt;
+&lt;td style=&#34;text-align:center;&#34;&gt;
+76
+&lt;/td&gt;
+&lt;td style=&#34;text-align:center;&#34;&gt;
+1292
+&lt;/td&gt;
+&lt;td style=&#34;text-align:center;&#34;&gt;
+136
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:center;&#34;&gt;
+2009
+&lt;/td&gt;
+&lt;td style=&#34;text-align:center;&#34;&gt;
+bonrip
+&lt;/td&gt;
+&lt;td style=&#34;text-align:center;&#34;&gt;
+f
+&lt;/td&gt;
+&lt;td style=&#34;text-align:center;&#34;&gt;
+32
+&lt;/td&gt;
+&lt;td style=&#34;text-align:center;&#34;&gt;
+1381
+&lt;/td&gt;
+&lt;td style=&#34;text-align:center;&#34;&gt;
+135
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:center;&#34;&gt;
+2009
+&lt;/td&gt;
+&lt;td style=&#34;text-align:center;&#34;&gt;
+bonrip
+&lt;/td&gt;
+&lt;td style=&#34;text-align:center;&#34;&gt;
+m
+&lt;/td&gt;
+&lt;td style=&#34;text-align:center;&#34;&gt;
+24
+&lt;/td&gt;
+&lt;td style=&#34;text-align:center;&#34;&gt;
+1431
+&lt;/td&gt;
+&lt;td style=&#34;text-align:center;&#34;&gt;
+136
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:center;&#34;&gt;
+2010
+&lt;/td&gt;
+&lt;td style=&#34;text-align:center;&#34;&gt;
+bonbs
+&lt;/td&gt;
+&lt;td style=&#34;text-align:center;&#34;&gt;
+f
+&lt;/td&gt;
+&lt;td style=&#34;text-align:center;&#34;&gt;
+48
+&lt;/td&gt;
+&lt;td style=&#34;text-align:center;&#34;&gt;
+1304
+&lt;/td&gt;
+&lt;td style=&#34;text-align:center;&#34;&gt;
+134
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:center;&#34;&gt;
+2010
+&lt;/td&gt;
+&lt;td style=&#34;text-align:center;&#34;&gt;
+bonbs
+&lt;/td&gt;
+&lt;td style=&#34;text-align:center;&#34;&gt;
+m
+&lt;/td&gt;
+&lt;td style=&#34;text-align:center;&#34;&gt;
+26
+&lt;/td&gt;
+&lt;td style=&#34;text-align:center;&#34;&gt;
+1328
+&lt;/td&gt;
+&lt;td style=&#34;text-align:center;&#34;&gt;
+137
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:center;&#34;&gt;
+2010
+&lt;/td&gt;
+&lt;td style=&#34;text-align:center;&#34;&gt;
+bonrip
+&lt;/td&gt;
+&lt;td style=&#34;text-align:center;&#34;&gt;
+f
+&lt;/td&gt;
+&lt;td style=&#34;text-align:center;&#34;&gt;
+48
+&lt;/td&gt;
+&lt;td style=&#34;text-align:center;&#34;&gt;
+1295
+&lt;/td&gt;
+&lt;td style=&#34;text-align:center;&#34;&gt;
+132
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:center;&#34;&gt;
+2010
+&lt;/td&gt;
+&lt;td style=&#34;text-align:center;&#34;&gt;
+bonrip
+&lt;/td&gt;
+&lt;td style=&#34;text-align:center;&#34;&gt;
+m
+&lt;/td&gt;
+&lt;td style=&#34;text-align:center;&#34;&gt;
+17
+&lt;/td&gt;
+&lt;td style=&#34;text-align:center;&#34;&gt;
+1383
+&lt;/td&gt;
+&lt;td style=&#34;text-align:center;&#34;&gt;
+135
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:center;&#34;&gt;
+2011
+&lt;/td&gt;
+&lt;td style=&#34;text-align:center;&#34;&gt;
+bonbs
+&lt;/td&gt;
+&lt;td style=&#34;text-align:center;&#34;&gt;
+f
+&lt;/td&gt;
+&lt;td style=&#34;text-align:center;&#34;&gt;
+39
+&lt;/td&gt;
+&lt;td style=&#34;text-align:center;&#34;&gt;
+1381
+&lt;/td&gt;
+&lt;td style=&#34;text-align:center;&#34;&gt;
+137
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:center;&#34;&gt;
+2011
+&lt;/td&gt;
+&lt;td style=&#34;text-align:center;&#34;&gt;
+bonbs
+&lt;/td&gt;
+&lt;td style=&#34;text-align:center;&#34;&gt;
+m
+&lt;/td&gt;
+&lt;td style=&#34;text-align:center;&#34;&gt;
+32
+&lt;/td&gt;
+&lt;td style=&#34;text-align:center;&#34;&gt;
+1432
+&lt;/td&gt;
+&lt;td style=&#34;text-align:center;&#34;&gt;
+136
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:center;&#34;&gt;
+2011
+&lt;/td&gt;
+&lt;td style=&#34;text-align:center;&#34;&gt;
+bonrip
+&lt;/td&gt;
+&lt;td style=&#34;text-align:center;&#34;&gt;
+f
+&lt;/td&gt;
+&lt;td style=&#34;text-align:center;&#34;&gt;
+46
+&lt;/td&gt;
+&lt;td style=&#34;text-align:center;&#34;&gt;
+1303
+&lt;/td&gt;
+&lt;td style=&#34;text-align:center;&#34;&gt;
+133
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:center;&#34;&gt;
+2011
+&lt;/td&gt;
+&lt;td style=&#34;text-align:center;&#34;&gt;
+bonrip
+&lt;/td&gt;
+&lt;td style=&#34;text-align:center;&#34;&gt;
+m
+&lt;/td&gt;
+&lt;td style=&#34;text-align:center;&#34;&gt;
+11
+&lt;/td&gt;
+&lt;td style=&#34;text-align:center;&#34;&gt;
+1307
+&lt;/td&gt;
+&lt;td style=&#34;text-align:center;&#34;&gt;
+137
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:center;&#34;&gt;
+2012
+&lt;/td&gt;
+&lt;td style=&#34;text-align:center;&#34;&gt;
+bonbs
+&lt;/td&gt;
+&lt;td style=&#34;text-align:center;&#34;&gt;
+f
+&lt;/td&gt;
+&lt;td style=&#34;text-align:center;&#34;&gt;
+23
+&lt;/td&gt;
+&lt;td style=&#34;text-align:center;&#34;&gt;
+1298
+&lt;/td&gt;
+&lt;td style=&#34;text-align:center;&#34;&gt;
+134
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:center;&#34;&gt;
+2012
+&lt;/td&gt;
+&lt;td style=&#34;text-align:center;&#34;&gt;
+bonbs
+&lt;/td&gt;
+&lt;td style=&#34;text-align:center;&#34;&gt;
+m
+&lt;/td&gt;
+&lt;td style=&#34;text-align:center;&#34;&gt;
+20
+&lt;/td&gt;
+&lt;td style=&#34;text-align:center;&#34;&gt;
+1354
+&lt;/td&gt;
+&lt;td style=&#34;text-align:center;&#34;&gt;
+142
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:center;&#34;&gt;
+2012
+&lt;/td&gt;
+&lt;td style=&#34;text-align:center;&#34;&gt;
+bonrip
+&lt;/td&gt;
+&lt;td style=&#34;text-align:center;&#34;&gt;
+f
+&lt;/td&gt;
+&lt;td style=&#34;text-align:center;&#34;&gt;
+1
+&lt;/td&gt;
+&lt;td style=&#34;text-align:center;&#34;&gt;
+1140
+&lt;/td&gt;
+&lt;td style=&#34;text-align:center;&#34;&gt;
+123
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:center;&#34;&gt;
+2012
+&lt;/td&gt;
+&lt;td style=&#34;text-align:center;&#34;&gt;
+bonrip
+&lt;/td&gt;
+&lt;td style=&#34;text-align:center;&#34;&gt;
+m
+&lt;/td&gt;
+&lt;td style=&#34;text-align:center;&#34;&gt;
+1
+&lt;/td&gt;
+&lt;td style=&#34;text-align:center;&#34;&gt;
+860
+&lt;/td&gt;
+&lt;td style=&#34;text-align:center;&#34;&gt;
+115
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;tfoot&gt;
+&lt;tr&gt;
+&lt;td style=&#34;padding: 0; border: 0;&#34; colspan=&#34;100%&#34;&gt;
+&lt;sup&gt;*&lt;/sup&gt; Data Source: Environmental Data Initiative. &lt;a href=&#34;https://doi.org/10.6073/pasta/03dce4856d79b91557d8e6ce2cbcdc14&#34; class=&#34;uri&#34;&gt;https://doi.org/10.6073/pasta/03dce4856d79b91557d8e6ce2cbcdc14&lt;/a&gt;
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tfoot&gt;
+&lt;/table&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# make final plot
+
+hares_plot &amp;lt;- ggplot(hare_first_table, aes(x = year, y = count, group = sex)) +
+  geom_line(aes(color = sex)) +
+  geom_point(aes(color = sex, size = avg_hindft), alpha = 0.5) +
+  facet_wrap(~ grid, scales = &amp;quot;free&amp;quot;) +
+  theme_minimal() +
+  labs(x = &amp;quot;Year&amp;quot;, y = &amp;quot;Snowshoe Hare Count&amp;quot;) +
+  labs(color = &amp;quot;Sex&amp;quot;, size = &amp;quot;Average Hind Foot Size&amp;quot;) +
+  theme(legend.position = &amp;quot;bottom&amp;quot;)
+
+hares_plot&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/project/snowshoe_hare/index_files/figure-html/unnamed-chunk-8-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Figure 1. Snowshoe Hare Observations in the Bonanza Creek Experimental Forest from 2008 - 2012. &lt;/strong&gt; Count for males and female snowshoe hares, organized by sampling grid locations. Points represent the average hind foot size for each observation.&lt;/p&gt;
+&lt;p&gt;&lt;br&gt;&lt;/p&gt;
+&lt;p&gt;Snowshoe hare populations at the BonBS sampling site increased significantly between 2008 and 2009, before declining sharply in 2010 and continuing to decline through 2012 to counts of approximately 20 for both males and females. At the BonRip sampling grid, male counts steadily declined from 2008 to 2012, while females remained in higher numbers to 2011 before sharply declining in 2012. At BonRip, both males and female counts were near 0 at the end of the study period. Despite the volatility in hare counts, average hind foot size remained relatively constant, and no discernible relationship with count could be determined.&lt;/p&gt;
+&lt;p&gt;&lt;br&gt;&lt;/p&gt;
+&lt;p&gt;Reference:&lt;/p&gt;
+&lt;p&gt;Kielland K., F. S. Chapin, R. W. Ruess. 2017. Snowshoe hare physical data in Bonanza Creek Experimental Forest: 1999-Present. Environmental Data Initiative. &lt;a href=&#34;https://doi.org/10.6073/pasta/03dce4856d79b91557d8e6ce2cbcdc14&#34; class=&#34;uri&#34;&gt;https://doi.org/10.6073/pasta/03dce4856d79b91557d8e6ce2cbcdc14&lt;/a&gt;.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
       <title>Principal Component Analysis</title>
       <link>/project/pca/</link>
       <pubDate>Thu, 09 Jan 2020 00:00:00 +0000</pubDate>
@@ -104,7 +640,69 @@ final_pca_plot&lt;/code&gt;&lt;/pre&gt;
       <description>
 
 
-&lt;p&gt;Put GP info here&lt;/p&gt;
+&lt;p&gt;California is heavily reliant on groundwater to support agriculture, industry and municipalities. This is particularly true in drought years, when up to 70% of water used for irrigation is sourced from groundwater (1). Prolonged unsustainable groundwater extraction has resulted in the deterioration of groundwater aquifers throughout the state. In the 21 groundwater basins deemed critically overdrafted by California’s Department of Water Resources, a sustained condition of outflows that are greater than inflows has caused declining groundwater levels and loss of groundwater storage (2).&lt;/p&gt;
+&lt;p&gt;The Sustainable Groundwater Management Act (SGMA), passed by the California Legislature in 2014, requires that groundwater basins with historic patterns of unsustainable extraction design and implement plans to reach sustainability by 2040 (3–5). Within these plans, Groundwater Sustainability Agencies are encouraged to identify projects and management actions that will be implemented to augment groundwater supply or reduce groundwater demand within their basin in order to balance pumping and recharge (6).&lt;/p&gt;
+&lt;p&gt;Managed aquifer recharge is one method that many Groundwater Sustainability Agencies will be utilizing to reach sustainability and rebalance aquifer levels. Groundwater recharge can be broadly defined as the “downward flow of water reaching the groundwater table, adding to groundwater storage” (7). Recharge can happen naturally, as precipitation infiltrates into permeable soils and percolates into the underlying aquifer, or in an intentional manner through the construction of injection wells or infiltration basins.&lt;/p&gt;
+&lt;p&gt;Currently, groundwater managers lack the tools and information necessary to identify recharge locations within their basins that are suitable to implement managed recharge at more than a surficial level. The most commonly used assessment tool for planning and siting groundwater recharge is the Soil Agricultural Groundwater Banking Index (SAGBI) which focuses on considerations of recharge suitability within the top 6 feet of the soil subsurface (8). There is no publicly available, widely applicable tool to help inform the placement of groundwater recharge projects that considers benefits other than those directly related to water infiltration in the ground surface.&lt;/p&gt;
+&lt;p&gt;We created a decision support tool using ArcMap Model Builder that can be used by Groundwater Sustainability Agencies (GSAs) to strategically site groundwater recharge projects that best achieve multiple benefits.&lt;/p&gt;
+&lt;div class=&#34;figure&#34;&gt;
+&lt;img src=&#34;schemattic.png&#34; alt=&#34;Figure 1: Decision Support Tool Schematic &#34; id=&#34;id&#34; class=&#34;class&#34; width=&#34;600&#34; height=&#34;600&#34; /&gt;
+&lt;p class=&#34;caption&#34;&gt;&lt;strong&gt;Figure 1: Decision Support Tool Schematic&lt;/strong&gt; &lt;/p&gt;
+&lt;/div&gt;
+&lt;p&gt;The tool considers recharge suitability at the ground surface through the inclusion of the Soil Agricultural Groundwater Banking Index (SAGBI), developed by researchers at the University of California, Davis (9). We add to this work through the inclusion of subsurface characteristics that could impact the efficacy of recharge projects, including the depth to groundwater, percent of coarse soil materials to a depth of 250 feet below the ground surface, and the depth and thickness of the Corcoran clay, a low permeability layer found throughout much of the Central Valley that can inhibit recharge (9–12).&lt;/p&gt;
+&lt;div class=&#34;figure&#34;&gt;
+&lt;img src=&#34;surface_subsurface.png&#34; alt=&#34;Figure 2: Surface and subsurface conditions in the Madera Subbasin. The Madera Subbasin was used as a test case when developing the decision support tool. Results shown for the Madera basin are illustrative of the type of output available to groundwater managers in any Central Valley Basin. Locations are ranked from better (dark green) to worse (dark red) for recharge projects. &#34; id=&#34;id&#34; class=&#34;class&#34; width=&#34;400&#34; height=&#34;400&#34; /&gt;
+&lt;p class=&#34;caption&#34;&gt;&lt;strong&gt;Figure 2: Surface and subsurface conditions in the Madera Subbasin.&lt;/strong&gt; The Madera Subbasin was used as a test case when developing the decision support tool. Results shown for the Madera basin are illustrative of the type of output available to groundwater managers in any Central Valley Basin. Locations are ranked from better (dark green) to worse (dark red) for recharge projects. &lt;/p&gt;
+&lt;/div&gt;
+&lt;p&gt;We also include a consideration of water quality in the tool, by accounting for surficial nitrogen balances that pose a risk of leaching nitrates into groundwater. By prioritizing locations with less intensive historic and projected nitrogen accumulation in the soils, a recharge project is less likely to introduce new contamination into groundwater and with sufficient water applied, may dilute existing contamination to improve water quality (13).&lt;/p&gt;
+&lt;div class=&#34;figure&#34;&gt;
+&lt;img src=&#34;nitrogen.png&#34; alt=&#34;Figure 3: Surficial nitrogen balances for the Madera Subbasin. The surficial nitrogen balance was calculated by combining information related to nitrogen additions and losses for 1990, 2005, and 2020. Better areas (dark green) have lower nitrogen balances, and are less likely to introduce nitrate contamination into the groundwater than areas ranked as worse (dark red). &#34; id=&#34;id&#34; class=&#34;class&#34; width=&#34;400&#34; height=&#34;400&#34; /&gt;
+&lt;p class=&#34;caption&#34;&gt;&lt;strong&gt;Figure 3: Surficial nitrogen balances for the Madera Subbasin.&lt;/strong&gt; The surficial nitrogen balance was calculated by combining information related to nitrogen additions and losses for 1990, 2005, and 2020. Better areas (dark green) have lower nitrogen balances, and are less likely to introduce nitrate contamination into the groundwater than areas ranked as worse (dark red). &lt;/p&gt;
+&lt;/div&gt;
+&lt;p&gt;In addition to a consideration of surface and subsurface conditions and water quality, we designed the decision support tool to allow a user to consider additional benefits that can be achieved through recharge projects, along with feasibility considerations related to initial project construction and cost. The additional benefits in the decision support tool include the ability of groundwater recharge projects to augment water supplies near shallow, domestic drinking water wells that have run dry, and the ability of a project to support potential groundwater dependent ecosystems (GDEs). We also incorporate the feasibility considerations of proximity of a potential recharge project location to existing water conveyance infrastructure included in the National Hydrography Dataset.&lt;/p&gt;
+&lt;p&gt;The result of our research is a Central Valley wide, transferable, publicly available decision support tool that can be used to identify areas best suited for achieving multiple benefits from groundwater recharge projects within a specified groundwater basin. The tool prioritizes areas within a basin that have conditions best suited to allow water to infiltrate and percolate into the underlying aquifers while presenting the least risk to adding nitrate contamination to the groundwater.&lt;/p&gt;
+&lt;div class=&#34;figure&#34;&gt;
+&lt;img src=&#34;recommended.png&#34; alt=&#34;Figure 4: Recommended recharge locations for the Madera Subbasin. Recommended recharge locations are the top 10% of sites in the subbasin that have current land uses that could facilitate groundwater recharge. Recommended locations are the best areas within the basin for getting clean water into the aquifer. &#34; id=&#34;id&#34; class=&#34;class&#34; width=&#34;400&#34; height=&#34;400&#34; /&gt;
+&lt;p class=&#34;caption&#34;&gt;&lt;strong&gt;Figure 4: Recommended recharge locations for the Madera Subbasin.&lt;/strong&gt; Recommended recharge locations are the top 10% of sites in the subbasin that have current land uses that could facilitate groundwater recharge. Recommended locations are the best areas within the basin for getting clean water into the aquifer. &lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&#34;figure&#34;&gt;
+&lt;img src=&#34;featured.jpg&#34; alt=&#34;Figure 5: Suitable recharge locations for the Central Valley. Though results have been demonstrated for the Madera Subbasin as a test case, the decision support tool can be utilized in any groundwater basin in the Central Valley. &#34; id=&#34;id&#34; class=&#34;class&#34; width=&#34;300&#34; height=&#34;900&#34; /&gt;
+&lt;p class=&#34;caption&#34;&gt;&lt;strong&gt;Figure 5: Suitable recharge locations for the Central Valley.&lt;/strong&gt; Though results have been demonstrated for the Madera Subbasin as a test case, the decision support tool can be utilized in any groundwater basin in the Central Valley. &lt;/p&gt;
+&lt;/div&gt;
+&lt;p&gt;The tool also allows for flexibility in determining the relative importance of the available benefit and feasibility considerations, such that the outputs can be customized to fit the interests and priorities of an individual basin. This functionality allows for the exploration of many scenarios and benefit schemes to assist in the optimal siting of groundwater recharge projects on a basin specific scale.&lt;/p&gt;
+&lt;div class=&#34;figure&#34;&gt;
+&lt;img src=&#34;engineer.png&#34; alt=&#34;Figure 6: Preferred multiple benefit recharge project locations. The decision support tool outputs can be customized by the user based on local priorities. Users can selectively weight a project’s proximity to existing water conveyance infrastructure, groundwater dependent ecosystems, and domestic drinking water wells that have run dry. A user can also prioritize a project’s distance from a listed contamination site. These sites are identified as preferred for their ability to provide additional benefits of groundwater recharge. Locations are ranked within the recommended recharge locations (top 10% in the basin) from most preferred according to the user priorities (dark orange) to least preferred (yellow).&#34; id=&#34;id&#34; class=&#34;class&#34; width=&#34;400&#34; height=&#34;400&#34; /&gt;
+&lt;p class=&#34;caption&#34;&gt;&lt;strong&gt;Figure 6: Preferred multiple benefit recharge project locations.&lt;/strong&gt; The decision support tool outputs can be customized by the user based on local priorities. Users can selectively weight a project’s proximity to existing water conveyance infrastructure, groundwater dependent ecosystems, and domestic drinking water wells that have run dry. A user can also prioritize a project’s distance from a listed contamination site. These sites are identified as preferred for their ability to provide additional benefits of groundwater recharge. Locations are ranked within the recommended recharge locations (top 10% in the basin) from most preferred according to the user priorities (dark orange) to least preferred (yellow).&lt;/p&gt;
+&lt;/div&gt;
+&lt;p&gt;Implementation of the Sustainable Groundwater Management Act over the next twenty years is likely to include a substantial increase in the size and number of groundwater recharge efforts throughout critically overdrafted groundwater basins in the Central Valley. Our decision support tool adds depth and breadth to existing knowledge regarding the best areas to locate groundwater recharge projects in order to capitalize on the opportunity to design projects that benefit communities, ecosystems, and the long-term sustainability of water resources.&lt;/p&gt;
+&lt;p&gt;For additional project information, please visit: &lt;a href=&#34;https://waterresilience.wixsite.com/waterresilienceca&#34; class=&#34;uri&#34;&gt;https://waterresilience.wixsite.com/waterresilienceca&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;References:
+&lt;br&gt;
+1. Marston L, Konar M. Drought impacts to water footprints and virtual water transfers of the Central Valley of California [Internet]. 2017 [cited 2019 Apr 27]. Available from: &lt;a href=&#34;https://agupubs.onlinelibrary.wiley.com/doi/10.1002/2016WR020251&#34; class=&#34;uri&#34;&gt;https://agupubs.onlinelibrary.wiley.com/doi/10.1002/2016WR020251&lt;/a&gt;
+&lt;br&gt;
+2. California Department of Water Resources. California’s Groundwater - Bulletin 118 Interim Update [Internet]. 2016 Dec. Available from: &lt;a href=&#34;https://water.ca.gov/-/media/DWR-Website/Web-Pages/Programs/Groundwater-Management/Bulletin-118/Files/B118-Interim-Update-2016_ay_19.pdf&#34; class=&#34;uri&#34;&gt;https://water.ca.gov/-/media/DWR-Website/Web-Pages/Programs/Groundwater-Management/Bulletin-118/Files/B118-Interim-Update-2016_ay_19.pdf&lt;/a&gt;
+&lt;br&gt;
+3. Pavley. SB-1319 Groundwater. [Internet]. BB 1319 Sep 16, 2014. Available from: &lt;a href=&#34;http://leginfo.legislature.ca.gov/faces/billNavClient.xhtml?bill_id=201320140SB1319&#34; class=&#34;uri&#34;&gt;http://leginfo.legislature.ca.gov/faces/billNavClient.xhtml?bill_id=201320140SB1319&lt;/a&gt;
+&lt;br&gt;
+4. Pavley. SB-1168 Groundwater management. [Internet]. SB 1168 Sep 16, 2014. Available from: &lt;a href=&#34;http://leginfo.legislature.ca.gov/faces/billNavClient.xhtml?bill_id=201320140SB1168&#34; class=&#34;uri&#34;&gt;http://leginfo.legislature.ca.gov/faces/billNavClient.xhtml?bill_id=201320140SB1168&lt;/a&gt;
+&lt;br&gt;
+5. Dickinson. AB-1739 Groundwater management [Internet]. AB 1739 Sep 16, 2014. Available from: &lt;a href=&#34;http://leginfo.legislature.ca.gov/faces/billNavClient.xhtml?bill_id=201320140AB1739&#34; class=&#34;uri&#34;&gt;http://leginfo.legislature.ca.gov/faces/billNavClient.xhtml?bill_id=201320140AB1739&lt;/a&gt;
+&lt;br&gt;
+6. Pavley, Dickinson. Sustainable Groundwater Management Act [Internet]. Water Code - Division 6: Conservation, Development and Utilization of State Water Resources Jan 1, 2015. Available from: &lt;a href=&#34;http://leginfo.legislature.ca.gov/faces/codes_displayText.xhtml?lawCode=WAT&amp;amp;division=6.&amp;amp;title=&amp;amp;part=2.74.&amp;amp;chapter=6.&amp;amp;article=&#34; class=&#34;uri&#34;&gt;http://leginfo.legislature.ca.gov/faces/codes_displayText.xhtml?lawCode=WAT&amp;amp;division=6.&amp;amp;title=&amp;amp;part=2.74.&amp;amp;chapter=6.&amp;amp;article=&lt;/a&gt;
+&lt;br&gt;
+7. Healy RW, Scanlon BR. Estimating groundwater recharge [Internet]. 2010 [cited 2020 Feb 21]. Available from: &lt;a href=&#34;https://pubs.er.usgs.gov/publication/70189200&#34; class=&#34;uri&#34;&gt;https://pubs.er.usgs.gov/publication/70189200&lt;/a&gt;
+&lt;br&gt;
+8. O’Geen A, Saal M, Dahlke H, Doll D, Elkins R, Fulton A, et al. Soil suitability index identifies potential areas for groundwater banking on agricultural lands. Calif Agric. 2015 Apr 1;69(2):75–84.
+&lt;br&gt;
+9. United States Geological Survey. USGS Water Resources NSDI Node | Contours of Corcoran Clay Thickness in feet by Page (1986) for the Central Valley Hydrologic Model (CVHM) [Internet]. [cited 2020 Feb 19]. Available from: &lt;a href=&#34;https://water.usgs.gov/GIS/metadata/usgswrd/XML/pp1766_corcoran_clay_thickness_feet.xml&#34; class=&#34;uri&#34;&gt;https://water.usgs.gov/GIS/metadata/usgswrd/XML/pp1766_corcoran_clay_thickness_feet.xml&lt;/a&gt;
+&lt;br&gt;
+10. United States Geological Survey. USGS Water Resources NSDI Node | Contours of Corcoran Clay Depth in feet from Page (1986) for the Central Valley Hydrologic Model (CVHM) [Internet]. [cited 2020 Feb 19]. Available from: &lt;a href=&#34;https://water.usgs.gov/GIS/metadata/usgswrd/XML/pp1766_corcoran_clay_depth_feet.xml&#34; class=&#34;uri&#34;&gt;https://water.usgs.gov/GIS/metadata/usgswrd/XML/pp1766_corcoran_clay_depth_feet.xml&lt;/a&gt;
+&lt;br&gt;
+11. California Department of Water Resources. Groundwater Information Center Interactive Map Application [Internet]. [cited 2020 Feb 19]. Available from: &lt;a href=&#34;https://gis.water.ca.gov/app/gicima/&#34; class=&#34;uri&#34;&gt;https://gis.water.ca.gov/app/gicima/&lt;/a&gt;
+&lt;br&gt;
+12. Faunt CC, Belitz K, Hanson RT. Development of a three-dimensional model of sedimentary texture in valley-fill deposits of Central Valley, California, USA. Hydrogeol J. 2010 May;18(3):625–49.
+&lt;br&gt;
+13. Bastani M, Harter T. Source area management practices as remediation tool to address groundwater nitrate pollution in drinking supply wells. J Contam Hydrol. 2019 Oct;226:103521.&lt;/p&gt;
 </description>
     </item>
     

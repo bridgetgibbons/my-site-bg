@@ -1,0 +1,547 @@
+---
+title: Analyzing Population Sampling Statistics
+author: ''
+date: '2020-01-09'
+slug: snowshoe_hare
+categories: []
+tags:
+  - statistical
+subtitle: 'Summarizing and visualizing trends in Snowshoe Hare populations in the Tanana Valley from 2008-2012'
+summary: 'Exploring trends in Snowshoe Hare populations in the Tanana Valley'
+authors: []
+lastmod: '2020-01-09T15:02:28-08:00'
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+projects: []
+---
+
+<script src="/rmarkdown-libs/kePrint/kePrint.js"></script>
+
+
+<pre class="r"><code># Load packages
+
+library(tidyverse)
+library(janitor)
+library(kableExtra)
+library(lubridate)
+library(ggfortify)
+library(tidyr)</code></pre>
+<p><br></p>
+<p>Snowshoe hares are a keystone species that live in northern boreal forests. Previously, studies of snowshoe hares have been qualitative in nature, and have focused on population responses to vegetation and predators. This analysis incorporates data from capture-recapture studies that were conducted in the Tanana Valley, within the Bonanza Creek Experimental Forest. Snowshoe hare populations generally experience fluctuations on a timeline of 8 - 11 years. The following analysis focuses on the five-year period from 2008-2012, highlighting the counts and average weights of male and female hares at two sampling sites, along with the average sizes of the snowshoe hares’ signature large hind foot (Table 1, Figure 1) (Kielland, Chapin &amp; Ruess, 2017).</p>
+<p><br></p>
+<div class="figure">
+<img src="hare_photo.png" alt="Image of a snowshoe hare with its signature hind foot. Image source: Northwest Wildlife (http://www.northwestwildlife.com/learn/species-reports/snowshoe-hare/)." />
+<p class="caption">Image of a snowshoe hare with its signature hind foot. Image source: Northwest Wildlife (<a href="http://www.northwestwildlife.com/learn/species-reports/snowshoe-hare/" class="uri">http://www.northwestwildlife.com/learn/species-reports/snowshoe-hare/</a>).</p>
+</div>
+<p><br></p>
+<pre class="r"><code># Read in the data, retain columns for grid, sex, and weight. 
+
+hares &lt;- read_csv(&quot;showshoe_lter.csv&quot;) %&gt;% # Read in data
+  mutate(date = mdy(date)) %&gt;% # transform the date data into a usable format
+  separate(date, into = c(&quot;year&quot;, &quot;month&quot;, &quot;day&quot;, sep = &quot;-&quot;)) %&gt;%  # separate the date into three columns  
+  mutate(grid = str_to_lower(grid),
+         sex = str_to_lower(sex)) %&gt;%  # make grid and sex all lower case
+  filter(
+    sex == &quot;m&quot; | sex == &quot;f&quot;
+  ) # retain only data that is certainly male or female</code></pre>
+<pre class="r"><code># explore data
+
+#summary(hares)</code></pre>
+<pre class="r"><code># make exploratory graphs
+
+explore_plot &lt;- ggplot(data = hares, aes(x = weight, y = hindft)) +
+  geom_point(aes(color = sex)) +
+  facet_wrap(~grid)
+
+# not sure about this as something interesting to present
+
+# not very many observations at bonmat, more at the other two grid locations</code></pre>
+<pre class="r"><code># clean up the dataset a bit more
+
+hares_clean &lt;- hares %&gt;% 
+  select(year, grid, sex, weight, hindft) %&gt;% 
+  filter(
+    grid == &quot;bonrip&quot; | grid == &quot;bonbs&quot;
+    ) %&gt;% #keep just the two grids of inteerest
+  filter(
+    year == &quot;2008&quot; | year == &quot;2009&quot; | year == &quot;2010&quot; | year == &quot;2011&quot; | year == &quot;2012&quot;
+    ) #keep just the years of interest, this exploration is just showing recent trends
+
+
+hares_nona &lt;- hares_clean %&gt;% 
+  drop_na() # remove NA values from the dataset</code></pre>
+<p><strong>Table 1. Summary Statistics for Snowshow Hares at Two Monitoring Points within the Bonanza Creek Experimental Forest from 2008 to 2012.</strong> Observed counts at sites BonRip and BonBS for males and females, along with average weights and hind foot sizes, are reported for each period.</p>
+<pre class="r"><code># Make the table look nice
+
+hare_final_table &lt;- kable(hare_first_table, col.names = c(&quot;Year&quot;, &quot;Grid Name&quot;,&quot;Sex&quot;,&quot;Hare Count&quot;, &quot;Average Weight&quot;, &quot;Average Hind Foot Size&quot;), align = &quot;c&quot;) %&gt;% 
+  add_header_above(c(&quot;&quot;, &quot;Snowshoe Hare Statistics&quot; = 4, &quot;&quot;)) %&gt;% 
+  kable_styling(bootstrap_options = &quot;striped&quot;, full_width = F, position = &quot;left&quot;) %&gt;% 
+  footnote(symbol = c(&quot;Data Source: Environmental Data Initiative. https://doi.org/10.6073/pasta/03dce4856d79b91557d8e6ce2cbcdc14&quot;))
+
+hare_final_table</code></pre>
+<table class="table table-striped" style="width: auto !important; ">
+<thead>
+<tr>
+<th style="border-bottom:hidden" colspan="1">
+</th>
+<th style="border-bottom:hidden; padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; " colspan="4">
+<div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; ">
+Snowshoe Hare Statistics
+</div>
+</th>
+<th style="border-bottom:hidden" colspan="1">
+</th>
+</tr>
+<tr>
+<th style="text-align:center;">
+Year
+</th>
+<th style="text-align:center;">
+Grid Name
+</th>
+<th style="text-align:center;">
+Sex
+</th>
+<th style="text-align:center;">
+Hare Count
+</th>
+<th style="text-align:center;">
+Average Weight
+</th>
+<th style="text-align:center;">
+Average Hind Foot Size
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center;">
+2008
+</td>
+<td style="text-align:center;">
+bonbs
+</td>
+<td style="text-align:center;">
+f
+</td>
+<td style="text-align:center;">
+49
+</td>
+<td style="text-align:center;">
+1287
+</td>
+<td style="text-align:center;">
+131
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+2008
+</td>
+<td style="text-align:center;">
+bonbs
+</td>
+<td style="text-align:center;">
+m
+</td>
+<td style="text-align:center;">
+50
+</td>
+<td style="text-align:center;">
+1358
+</td>
+<td style="text-align:center;">
+134
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+2008
+</td>
+<td style="text-align:center;">
+bonrip
+</td>
+<td style="text-align:center;">
+f
+</td>
+<td style="text-align:center;">
+38
+</td>
+<td style="text-align:center;">
+1389
+</td>
+<td style="text-align:center;">
+133
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+2008
+</td>
+<td style="text-align:center;">
+bonrip
+</td>
+<td style="text-align:center;">
+m
+</td>
+<td style="text-align:center;">
+26
+</td>
+<td style="text-align:center;">
+1364
+</td>
+<td style="text-align:center;">
+134
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+2009
+</td>
+<td style="text-align:center;">
+bonbs
+</td>
+<td style="text-align:center;">
+f
+</td>
+<td style="text-align:center;">
+85
+</td>
+<td style="text-align:center;">
+1243
+</td>
+<td style="text-align:center;">
+132
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+2009
+</td>
+<td style="text-align:center;">
+bonbs
+</td>
+<td style="text-align:center;">
+m
+</td>
+<td style="text-align:center;">
+76
+</td>
+<td style="text-align:center;">
+1292
+</td>
+<td style="text-align:center;">
+136
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+2009
+</td>
+<td style="text-align:center;">
+bonrip
+</td>
+<td style="text-align:center;">
+f
+</td>
+<td style="text-align:center;">
+32
+</td>
+<td style="text-align:center;">
+1381
+</td>
+<td style="text-align:center;">
+135
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+2009
+</td>
+<td style="text-align:center;">
+bonrip
+</td>
+<td style="text-align:center;">
+m
+</td>
+<td style="text-align:center;">
+24
+</td>
+<td style="text-align:center;">
+1431
+</td>
+<td style="text-align:center;">
+136
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+2010
+</td>
+<td style="text-align:center;">
+bonbs
+</td>
+<td style="text-align:center;">
+f
+</td>
+<td style="text-align:center;">
+48
+</td>
+<td style="text-align:center;">
+1304
+</td>
+<td style="text-align:center;">
+134
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+2010
+</td>
+<td style="text-align:center;">
+bonbs
+</td>
+<td style="text-align:center;">
+m
+</td>
+<td style="text-align:center;">
+26
+</td>
+<td style="text-align:center;">
+1328
+</td>
+<td style="text-align:center;">
+137
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+2010
+</td>
+<td style="text-align:center;">
+bonrip
+</td>
+<td style="text-align:center;">
+f
+</td>
+<td style="text-align:center;">
+48
+</td>
+<td style="text-align:center;">
+1295
+</td>
+<td style="text-align:center;">
+132
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+2010
+</td>
+<td style="text-align:center;">
+bonrip
+</td>
+<td style="text-align:center;">
+m
+</td>
+<td style="text-align:center;">
+17
+</td>
+<td style="text-align:center;">
+1383
+</td>
+<td style="text-align:center;">
+135
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+2011
+</td>
+<td style="text-align:center;">
+bonbs
+</td>
+<td style="text-align:center;">
+f
+</td>
+<td style="text-align:center;">
+39
+</td>
+<td style="text-align:center;">
+1381
+</td>
+<td style="text-align:center;">
+137
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+2011
+</td>
+<td style="text-align:center;">
+bonbs
+</td>
+<td style="text-align:center;">
+m
+</td>
+<td style="text-align:center;">
+32
+</td>
+<td style="text-align:center;">
+1432
+</td>
+<td style="text-align:center;">
+136
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+2011
+</td>
+<td style="text-align:center;">
+bonrip
+</td>
+<td style="text-align:center;">
+f
+</td>
+<td style="text-align:center;">
+46
+</td>
+<td style="text-align:center;">
+1303
+</td>
+<td style="text-align:center;">
+133
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+2011
+</td>
+<td style="text-align:center;">
+bonrip
+</td>
+<td style="text-align:center;">
+m
+</td>
+<td style="text-align:center;">
+11
+</td>
+<td style="text-align:center;">
+1307
+</td>
+<td style="text-align:center;">
+137
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+2012
+</td>
+<td style="text-align:center;">
+bonbs
+</td>
+<td style="text-align:center;">
+f
+</td>
+<td style="text-align:center;">
+23
+</td>
+<td style="text-align:center;">
+1298
+</td>
+<td style="text-align:center;">
+134
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+2012
+</td>
+<td style="text-align:center;">
+bonbs
+</td>
+<td style="text-align:center;">
+m
+</td>
+<td style="text-align:center;">
+20
+</td>
+<td style="text-align:center;">
+1354
+</td>
+<td style="text-align:center;">
+142
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+2012
+</td>
+<td style="text-align:center;">
+bonrip
+</td>
+<td style="text-align:center;">
+f
+</td>
+<td style="text-align:center;">
+1
+</td>
+<td style="text-align:center;">
+1140
+</td>
+<td style="text-align:center;">
+123
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+2012
+</td>
+<td style="text-align:center;">
+bonrip
+</td>
+<td style="text-align:center;">
+m
+</td>
+<td style="text-align:center;">
+1
+</td>
+<td style="text-align:center;">
+860
+</td>
+<td style="text-align:center;">
+115
+</td>
+</tr>
+</tbody>
+<tfoot>
+<tr>
+<td style="padding: 0; border: 0;" colspan="100%">
+<sup>*</sup> Data Source: Environmental Data Initiative. <a href="https://doi.org/10.6073/pasta/03dce4856d79b91557d8e6ce2cbcdc14" class="uri">https://doi.org/10.6073/pasta/03dce4856d79b91557d8e6ce2cbcdc14</a>
+</td>
+</tr>
+</tfoot>
+</table>
+<pre class="r"><code># make final plot
+
+hares_plot &lt;- ggplot(hare_first_table, aes(x = year, y = count, group = sex)) +
+  geom_line(aes(color = sex)) +
+  geom_point(aes(color = sex, size = avg_hindft), alpha = 0.5) +
+  facet_wrap(~ grid, scales = &quot;free&quot;) +
+  theme_minimal() +
+  labs(x = &quot;Year&quot;, y = &quot;Snowshoe Hare Count&quot;) +
+  labs(color = &quot;Sex&quot;, size = &quot;Average Hind Foot Size&quot;) +
+  theme(legend.position = &quot;bottom&quot;)
+
+hares_plot</code></pre>
+<p><img src="/project/snowshoe_hare/index_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+<p><strong>Figure 1. Snowshoe Hare Observations in the Bonanza Creek Experimental Forest from 2008 - 2012. </strong> Count for males and female snowshoe hares, organized by sampling grid locations. Points represent the average hind foot size for each observation.</p>
+<p><br></p>
+<p>Snowshoe hare populations at the BonBS sampling site increased significantly between 2008 and 2009, before declining sharply in 2010 and continuing to decline through 2012 to counts of approximately 20 for both males and females. At the BonRip sampling grid, male counts steadily declined from 2008 to 2012, while females remained in higher numbers to 2011 before sharply declining in 2012. At BonRip, both males and female counts were near 0 at the end of the study period. Despite the volatility in hare counts, average hind foot size remained relatively constant, and no discernible relationship with count could be determined.</p>
+<p><br></p>
+<p>Reference:</p>
+<p>Kielland K., F. S. Chapin, R. W. Ruess. 2017. Snowshoe hare physical data in Bonanza Creek Experimental Forest: 1999-Present. Environmental Data Initiative. <a href="https://doi.org/10.6073/pasta/03dce4856d79b91557d8e6ce2cbcdc14" class="uri">https://doi.org/10.6073/pasta/03dce4856d79b91557d8e6ce2cbcdc14</a>.</p>
